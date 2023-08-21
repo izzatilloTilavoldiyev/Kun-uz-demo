@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  app:
+    image: kun-uz
+    container_name: kun-uz
+    build: ../
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: 1234
+
+  db:
+    container_name: kun-uz-db
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - pg_data_kun_uz:/var/lib/postgresql/kun-uz
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 1234
+      PGADMIN_LISTEN_PORT: 5050
+    ports:
+      - "5252:5050"
+
+volumes:
+  pg_data_kun_uz:
