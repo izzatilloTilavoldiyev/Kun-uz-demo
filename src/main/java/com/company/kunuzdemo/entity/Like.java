@@ -4,7 +4,7 @@ import com.company.kunuzdemo.enums.LikeStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "likes")
+@Entity(name = "like")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -12,14 +12,15 @@ import lombok.*;
 @Builder
 public class Like extends BaseEntity{
 
-    @Column(nullable = false, name = "status")
+    @Column(nullable = false, name = "like_status")
     @Enumerated(EnumType.STRING)
     private LikeStatus status;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "article_id")
     private Article article;
 }

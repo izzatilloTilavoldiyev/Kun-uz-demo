@@ -35,7 +35,7 @@ public class User extends BaseEntity{
     private UserStatus status;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "attach_id", nullable = false)
-    private Attachment attachment;
+    @JoinColumn(name = "media_id", nullable = false)
+    private Media media;
 
 }
