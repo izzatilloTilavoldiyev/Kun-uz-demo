@@ -1,11 +1,31 @@
+#server:
+#  port: ${SERVER_PORT:8080}
+#
+#spring:
+#  datasource:
+#    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+#    username: ${DB_USERNAME:postgres}
+#    password: ${DB_PASSWORD:4999}
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#    generate-ddl: true
+#    database-platform:
+#      org.hibernate.dialect.PostgreSQLDialect
+
 server:
-  port: ${SERVER_PORT:8080}
+  port: 8082
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:4999}
+    url: jdbc:postgresql://localhost:5432/kun_uz
+    username: postgres
+    password: 4999
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -17,4 +37,3 @@ spring:
     generate-ddl: true
     database-platform:
       org.hibernate.dialect.PostgreSQLDialect
-
