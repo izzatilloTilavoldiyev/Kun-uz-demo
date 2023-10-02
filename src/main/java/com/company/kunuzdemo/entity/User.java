@@ -5,6 +5,10 @@ import com.company.kunuzdemo.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @Entity(name = "users")
 @AllArgsConstructor
@@ -12,7 +16,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class User extends BaseEntity{
+public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String firstName;
 
@@ -38,4 +42,33 @@ public class User extends BaseEntity{
     @JoinColumn(name = "media_id", nullable = false)
     private Media media;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getAuthorities();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
