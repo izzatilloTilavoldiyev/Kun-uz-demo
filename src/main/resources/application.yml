@@ -37,3 +37,16 @@ spring:
     generate-ddl: true
     database-platform:
       org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  access:
+    token:
+      expiry: 3600000 # 60 minutes
+      secret:
+        key: 8d1877ec5cb495b9cd9993c636a54ee0e7486212232baaa269dd731bb1ccb6ee
+
+  refresh:
+    token:
+      expiry: 864000000 # 10 days
+      secret:
+        key:

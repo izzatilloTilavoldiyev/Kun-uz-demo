@@ -4,7 +4,7 @@ import com.company.kunuzdemo.enums.LikeStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "like")
+@Entity(name = "likes")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
