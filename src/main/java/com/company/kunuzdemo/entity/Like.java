@@ -24,5 +24,4 @@ public class Like extends BaseEntity{
     @JoinColumn(nullable = false, name = "article_id")
     private Article article;
 
-    private boolean deleted;
 }

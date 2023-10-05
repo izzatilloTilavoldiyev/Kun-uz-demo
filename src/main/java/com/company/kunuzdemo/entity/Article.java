@@ -53,6 +53,9 @@ public class Article extends BaseEntity{
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes;
+
     private boolean deleted;
 
 }
