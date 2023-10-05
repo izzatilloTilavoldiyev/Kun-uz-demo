@@ -19,4 +19,6 @@ public class Media {
 
     @Column(nullable = false, unique = true)
     private String fileDownloadUri;
+
+    private boolean deleted;
 }
