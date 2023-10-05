@@ -1,0 +1,54 @@
+ARTICLE
+CATEGORY
+  1. create
+  2. get
+  3. get all
+  4. get all visible
+  5. get all un visible
+  6. update
+  7. delete
+  8. delete selected
+
+COMMENT
+  1. create
+  2. get
+  3. get by article
+  4. update
+  5. delete
+  6. delete selected
+
+LIKE
+  1. create
+  2. get
+  3. get by article
+  4. update
+  5. delete
+
+MEDIA
+  APIs
+  1. upload
+  2. download
+
+REGION
+  1. create
+  2. get
+  3. get all
+  4. get all visible
+  5. get all  un visible
+  6. update
+  7. delete
+  8. delete selected
+
+USER
+  Auth
+    1. Sign up
+    2. verify by email
+    3. generate new verification code
+    4. sign in
+    5. forgot password
+    6. change password
+
+  User
+    1. get
+    2. get all
+    3. filter by role

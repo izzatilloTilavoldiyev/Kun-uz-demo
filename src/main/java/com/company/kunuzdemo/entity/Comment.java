@@ -22,6 +22,4 @@ public class Comment extends BaseEntity{
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
-    private boolean deleted;
-
 }

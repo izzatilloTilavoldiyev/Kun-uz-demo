@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum UserRole {
+    SUPER_ADMIN,
     ADMIN,
     PUBLISHER,
     USER;
