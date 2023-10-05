@@ -53,4 +53,6 @@ public class Article extends BaseEntity{
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    private boolean deleted;
+
 }

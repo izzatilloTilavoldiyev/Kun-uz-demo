@@ -42,6 +42,8 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "media_id", nullable = false)
     private Media media;
 
+    private boolean deleted;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
