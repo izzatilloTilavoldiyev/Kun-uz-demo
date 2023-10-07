@@ -5,10 +5,9 @@ import com.company.kunuzdemo.dtos.response.CategoryDTO;
 import com.company.kunuzdemo.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/category")
@@ -17,7 +16,11 @@ public class CategoryController {
     private final CategoryService categoryService;
     @PostMapping("/create")
     public CategoryDTO create(@Valid @RequestBody CategoryCreateDTO dto) {
-        System.out.println();
         return categoryService.create(dto);
+    }
+
+    @GetMapping("/get-by-id/{categoryId}")
+    public CategoryDTO getById(@PathVariable UUID categoryId) {
+        return categoryService.getById(categoryId);
     }
 }
