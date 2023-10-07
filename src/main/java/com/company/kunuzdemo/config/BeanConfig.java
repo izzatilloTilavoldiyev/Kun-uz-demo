@@ -13,19 +13,26 @@ public class BeanConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 
-        // Configure ModelMapper to retain old values when the source value is null
+        // Configure ModelMapper to retain old values when the source value is not null or not blank
         modelMapper.getConfiguration().setPropertyCondition(
-                new NotNullPropertyCondition()
+                new NotNullAndNotBlankPropertyCondition()
         );
 
         return modelMapper;
     }
 
-    private static class NotNullPropertyCondition implements Condition<Object, Object> {
+    private static class NotNullAndNotBlankPropertyCondition implements Condition<Object, Object> {
         @Override
         public boolean applies(MappingContext<Object, Object> context) {
-            return context.getSource() != null;
+            Object source = context.getSource();
+            if (source == null) {
+                return false;
+            }
+            if (source instanceof String) {
+                // Check if the source string is blank (empty or contains only whitespace)
+                return !((String) source).trim().isEmpty();
+            }
+            return true;
         }
     }
-
 }
