@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegionDTO {
+public class RegionResponseDTO {
     private String nameUZ;
     private String nameRU;
     private String nameEN;
