@@ -56,7 +56,7 @@ public class CategoryController {
             @RequestBody CategoryDTO dto
     ) {
 
-        return ResponseEntity.ok(categoryService.update(categoryId, dto));
+        return ResponseEntity.ok(categoryService.updateById(categoryId, dto));
     }
 
     @DeleteMapping("/delete/{categoryId}")
