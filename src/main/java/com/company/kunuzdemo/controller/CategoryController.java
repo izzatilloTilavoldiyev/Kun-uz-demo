@@ -2,6 +2,7 @@ package com.company.kunuzdemo.controller;
 
 import com.company.kunuzdemo.dtos.request.CategoryCreateDTO;
 import com.company.kunuzdemo.dtos.response.CategoryDTO;
+import com.company.kunuzdemo.dtos.response.CategoryUpdateDTO;
 import com.company.kunuzdemo.service.CategoryServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class CategoryController {
     public ResponseEntity<CategoryDTO> updateById(
             @Valid
             @PathVariable UUID categoryId,
-            @RequestBody CategoryDTO dto
+            @RequestBody CategoryUpdateDTO dto
     ) {
 
         return ResponseEntity.ok(categoryService.updateById(categoryId, dto));

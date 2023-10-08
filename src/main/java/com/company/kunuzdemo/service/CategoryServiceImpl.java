@@ -2,6 +2,7 @@ package com.company.kunuzdemo.service;
 
 import com.company.kunuzdemo.dtos.request.CategoryCreateDTO;
 import com.company.kunuzdemo.dtos.response.CategoryDTO;
+import com.company.kunuzdemo.dtos.response.CategoryUpdateDTO;
 import com.company.kunuzdemo.entity.Category;
 import com.company.kunuzdemo.exception.DataNotFoundException;
 import com.company.kunuzdemo.repository.CategoryRepository;
@@ -59,13 +60,14 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public CategoryDTO updateById(UUID categoryId, CategoryDTO dto) {
+    public CategoryDTO updateById(UUID categoryId, CategoryUpdateDTO dto) {
 
         Category category = categoryRepository.findById(categoryId).orElseThrow(
                 () -> new DataNotFoundException("category not found"));
         category.setNameUZ(dto.getNameUZ());
         category.setNameRU(dto.getNameRU());
         category.setNameEN(dto.getNameEN());
+        category.setVisible(dto.isVisible());
         Category categoryUpdate = categoryRepository.save(category);
         return modelMapper.map(categoryUpdate, CategoryDTO.class);
     }
