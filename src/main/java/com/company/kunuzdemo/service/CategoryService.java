@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface CategoryService {
     CategoryDTO create(CategoryCreateDTO dto);
+
     CategoryDTO getById(UUID categoryId);
 
     CategoryDTO updateById(UUID categoryId, CategoryUpdateDTO dto);
@@ -16,7 +17,10 @@ public interface CategoryService {
     List<CategoryDTO> getAll();
 
     List<CategoryDTO> getAllVisible();
+
     List<CategoryDTO> getAllUnVisible();
 
     void deleteById(UUID categoryId);
+
+    void deleteSelectedCategories(List<UUID> categoryIDs);
 }
