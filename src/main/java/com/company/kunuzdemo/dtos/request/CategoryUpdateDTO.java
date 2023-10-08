@@ -1,4 +1,4 @@
-package com.company.kunuzdemo.dtos.response;
+package com.company.kunuzdemo.dtos.request;
 
 import lombok.*;
 

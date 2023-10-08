@@ -23,4 +23,5 @@ public interface RegionService {
 
     void deleteByID(UUID regionID);
 
+    void deleteSelectedRegions(List<UUID> regionIDs);
 }

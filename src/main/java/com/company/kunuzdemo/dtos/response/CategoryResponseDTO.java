@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoryDTO {
+public class CategoryResponseDTO {
     private String nameUZ;
     private String nameRU;
     private String nameEN;

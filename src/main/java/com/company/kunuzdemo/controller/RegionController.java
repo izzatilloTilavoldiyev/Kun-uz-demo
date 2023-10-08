@@ -68,4 +68,12 @@ public class RegionController {
         return ResponseEntity.ok("Successfully deleted!");
     }
 
+    @DeleteMapping("/all-selected")
+    public ResponseEntity<String> deleteSelectedRegions(
+            @RequestBody List<UUID> regionIDs
+    ) {
+        regionService.deleteSelectedRegions(regionIDs);
+        return ResponseEntity.ok("Successfully deleted!");
+    }
+
 }
