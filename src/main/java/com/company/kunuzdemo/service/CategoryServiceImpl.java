@@ -75,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public void deleteById(UUID categoryId) {
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(
+        categoryRepository.findById(categoryId).orElseThrow(
                 () -> new DataNotFoundException("category not found"));
         categoryRepository.deleteById(categoryId);
     }
