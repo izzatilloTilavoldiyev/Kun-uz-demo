@@ -79,4 +79,11 @@ public class CategoryServiceImpl implements CategoryService{
                 () -> new DataNotFoundException("category not found"));
         categoryRepository.deleteById(categoryId);
     }
+
+    @Override
+    public void deleteSelectedCategories(List<UUID> categoryIDs) {
+        for (UUID categoryID : categoryIDs) {
+            deleteById(categoryID);
+        }
+    }
 }

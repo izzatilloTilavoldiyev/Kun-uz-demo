@@ -5,6 +5,7 @@ import com.company.kunuzdemo.exception.DataNotFoundException;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -71,6 +72,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<AppErrorDTO> expiredJwtExceptionHandler(ExpiredJwtException e, HttpServletRequest request) {
         return ResponseEntity.status(401)
                 .body(new AppErrorDTO(request.getRequestURI(), "Token has expired .", 401));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<AppErrorDTO> dataIntegrityViolationExceptionHandler(RuntimeException e, HttpServletRequest request) {
+        AppErrorDTO errorDTO = new AppErrorDTO(
+                request.getRequestURI(),
+                "Data integrity violation: " + e.getMessage(),
+                409
+        );
+        return ResponseEntity.status(409).body(errorDTO);
     }
 
 }

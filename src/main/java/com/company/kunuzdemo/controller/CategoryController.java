@@ -66,4 +66,12 @@ public class CategoryController {
         categoryService.deleteById(categoryId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/all-selected")
+    public ResponseEntity<String> deleteSelectedCategories(
+            @RequestBody List<UUID> categoryIDs
+    ) {
+        categoryService.deleteSelectedCategories(categoryIDs);
+        return ResponseEntity.ok("Successfully deleted!");
+    }
 }
