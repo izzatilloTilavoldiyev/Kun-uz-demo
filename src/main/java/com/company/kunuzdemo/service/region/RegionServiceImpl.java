@@ -65,6 +65,13 @@ public class RegionServiceImpl implements RegionService{
         regionRepository.deleteById(regionID);
     }
 
+    @Override
+    public void deleteSelectedRegions(List<UUID> regionIDs) {
+        for (UUID regionID : regionIDs) {
+            deleteByID(regionID);
+        }
+    }
+
     private Region getRegionByID(UUID regionID) {
         return regionRepository.findRegionById(regionID).orElseThrow(
                 () -> new DataNotFoundException("Region not found with ID: " + regionID)
