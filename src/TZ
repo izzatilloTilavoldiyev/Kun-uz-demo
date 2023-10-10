@@ -1,4 +1,19 @@
 ARTICLE
+  1. create
+  2. get
+  3. get all
+  4. get all visible
+  5. get all un visible
+  6. get by language
+  7. get by region
+  8. latest news
+  9. recommend
+  10. search (by title)
+  11. update
+  12. change status
+  13. delete
+  14. delete selected
+
 CATEGORY
   1. create
   2. get
@@ -28,6 +43,7 @@ MEDIA
   APIs
   1. upload
   2. download
+  3. delete
 
 REGION
   1. create
@@ -52,3 +68,11 @@ USER
     1. get
     2. get all
     3. filter by role
+    4. block
+    5. unblock
+    6. change role
+    7. update
+    8. update profile
+    9. delete
+    10. delete selected
+    11. search by email
