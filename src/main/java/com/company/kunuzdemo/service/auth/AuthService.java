@@ -7,4 +7,7 @@ import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 public interface AuthService {
 
     AuthResponseDTO<UserResponseDTO> create(UserCreateDTO userCreateDTO);
+
+    String verify(String email, String verificationCode);
+
 }
