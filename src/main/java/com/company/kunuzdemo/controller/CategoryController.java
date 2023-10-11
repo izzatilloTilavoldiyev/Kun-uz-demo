@@ -5,6 +5,7 @@ import com.company.kunuzdemo.dtos.response.CategoryResponseDTO;
 import com.company.kunuzdemo.dtos.request.CategoryUpdateDTO;
 import com.company.kunuzdemo.service.category.CategoryServiceImpl;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class CategoryController {
     }
 
     @GetMapping("/get-by-id/{categoryId}")
-    public ResponseEntity<CategoryResponseDTO> getById(@Valid @PathVariable UUID categoryId) {
+    public ResponseEntity<CategoryResponseDTO> getById(@Valid @PathVariable @NotNull UUID categoryId) {
 
         return ResponseEntity.ok(categoryService.getById(categoryId));
     }
@@ -52,8 +53,9 @@ public class CategoryController {
 
     @PutMapping("/update/{categoryId}")
     public ResponseEntity<CategoryResponseDTO> updateById(
-            @Valid
-            @PathVariable UUID categoryId,
+            @NotNull
+            @PathVariable
+            @Valid UUID categoryId,
             @RequestBody CategoryUpdateDTO dto
     ) {
 
@@ -61,7 +63,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete/{categoryId}")
-    public ResponseEntity<String> delete(@Valid @PathVariable UUID categoryId) {
+    public ResponseEntity<String> delete(@Valid @PathVariable @NotNull UUID categoryId) {
 
         categoryService.deleteById(categoryId);
         return ResponseEntity.ok("Successfully deleted!");
