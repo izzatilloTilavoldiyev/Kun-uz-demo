@@ -37,9 +37,4 @@ public class BeanConfig {
             return true;
         }
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

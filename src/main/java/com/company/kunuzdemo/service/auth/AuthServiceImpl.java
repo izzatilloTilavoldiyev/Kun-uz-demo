@@ -1,19 +1,25 @@
 package com.company.kunuzdemo.service.auth;
 
+import com.company.kunuzdemo.config.jwt.JwtService;
+import com.company.kunuzdemo.dtos.request.LoginDTO;
 import com.company.kunuzdemo.dtos.request.UserCreateDTO;
 import com.company.kunuzdemo.dtos.response.AuthResponseDTO;
+import com.company.kunuzdemo.dtos.response.TokenDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.User;
 import com.company.kunuzdemo.entity.VerificationData;
 import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.enums.UserStatus;
-import com.company.kunuzdemo.exception.DataNotFoundException;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.exception.UserPasswordWrongException;
 import com.company.kunuzdemo.repository.UserRepository;
 import com.company.kunuzdemo.service.mail.MailSenderService;
+import com.company.kunuzdemo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +33,12 @@ import java.util.Random;
 public class AuthServiceImpl implements AuthService{
 
     private final UserRepository userRepository;
+    private final UserService userService;
     private final ModelMapper modelMapper;
     private final MailSenderService mailSenderService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public AuthResponseDTO<UserResponseDTO> create(UserCreateDTO userCreateDTO) {
@@ -49,15 +58,34 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public String verify(String email, String verificationCode) {
-        Optional<User> repoUser = userRepository.findByEmail(email);
-        if (repoUser.isEmpty())
-            throw new DataNotFoundException("User not found with Email: " + email);
-        User user = repoUser.get();
+        User user = userService.getUserByEmail(email);
         if (checkVerificationCodeAndExpiration(user.getVerificationData(), verificationCode))
             return "Verification code wrong";
         user.setStatus(UserStatus.ACTIVE);
         userRepository.save(user);
         return "Successfully verified";
+    }
+
+    @Override
+    public String newVerifyCode(String email) {
+        User user = userService.getUserByEmail(email);
+        user.setVerificationData(generateVerificationCode());
+        userRepository.save(user);
+        return mailSenderService.sendVerificationCode(email, user.getVerificationData().getVerificationCode());
+    }
+
+    @Override
+    public TokenDTO login(LoginDTO loginDTO) {
+        User user = userService.getUserByEmail(loginDTO.getEmail());
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword()))
+            throw new UserPasswordWrongException("User password wrong with Password: " + loginDTO.getPassword());
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginDTO.getEmail(),
+                        loginDTO.getPassword()
+                )
+        );
+        return jwtService.generateToken(user.getEmail());
     }
 
     private void checkEmailUnique(String email) {
@@ -72,7 +100,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     private void checkPasswordIsValid(String password) {
-        String passwordRegex = "^ (?=.* [0-9]) (?=.* [a-z]) (?=.* [A-Z]) (?=.* #$%^&-+= ()]) (?=\\S+$). {8, 20}$";
+        String passwordRegex = "^ (?=.* [0-9]) (?=.* [a-z]) (?=.* [A-Z]) (?=.* #$%^&-+= ()]) (?=\\S+$). {8,20}$";
         if (!password.matches(passwordRegex)) {
             throw new IllegalArgumentException("Invalid password: " + password);
         }
