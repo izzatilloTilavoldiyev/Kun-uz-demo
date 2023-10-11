@@ -1,18 +1,17 @@
 package com.company.kunuzdemo.controller;
 
-
+import com.company.kunuzdemo.dtos.request.LoginDTO;
 import com.company.kunuzdemo.dtos.request.UserCreateDTO;
+import com.company.kunuzdemo.dtos.request.VerifyDTO;
 import com.company.kunuzdemo.dtos.response.AuthResponseDTO;
+import com.company.kunuzdemo.dtos.response.TokenDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,4 +28,27 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
+    @PostMapping("/verify")
+    public ResponseEntity<String> verify(
+            @Valid @RequestBody VerifyDTO verifyDTO
+    ) {
+        String response = authService.verify(verifyDTO.getEmail(), verifyDTO.getVerificationCode());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/new-verification-code")
+    public ResponseEntity<String> newVerificationCode(
+            @RequestParam String email
+    ) {
+        String response = authService.newVerifyCode(email);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/sing-in")
+    public ResponseEntity<TokenDTO> signIn(
+            @Valid @RequestBody LoginDTO loginDTO
+    ) {
+        TokenDTO login = authService.login(loginDTO);
+        return ResponseEntity.ok(login);
+    }
 }

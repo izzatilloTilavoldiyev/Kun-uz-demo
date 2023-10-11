@@ -29,6 +29,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new DataNotFoundException("User not found with Email: " + email)
+        );
+    }
+
+    @Override
     public Page<UserResponseDTO> getAll(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
