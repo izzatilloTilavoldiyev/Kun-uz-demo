@@ -37,6 +37,26 @@ spring:
     generate-ddl: true
     database-platform:
       org.hibernate.dialect.PostgreSQLDialect
+  rabbitmq:
+    listener:
+      direct:
+        consumers-per-queue:
+
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: izzatillotilavoldiyev5@gmail.com
+    password: kamqbldqprgwgdwn
+    properties:
+      mjaail:
+        smtp:
+          auth: true
+      mail:
+        smtp:
+          starttls:
+            enable: true
+
 
 jwt:
   access:
