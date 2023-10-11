@@ -19,13 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -74,6 +72,7 @@ public class AuthServiceImpl implements AuthService{
         return mailSenderService.sendVerificationCode(email, user.getVerificationData().getVerificationCode());
     }
 
+    //todo: check delete user
     @Override
     public TokenDTO login(LoginDTO loginDTO) {
         User user = userService.getUserByEmail(loginDTO.getEmail());
@@ -96,7 +95,7 @@ public class AuthServiceImpl implements AuthService{
     private void checkUserPasswordAndIsValid(String password, String confirmPassword) {
         if (!Objects.equals(password, confirmPassword))
             throw new UserPasswordWrongException("Password must be same with confirm password: " + confirmPassword);
-//        checkPasswordIsValid(password);
+        checkPasswordIsValid(password);
     }
 
     private void checkPasswordIsValid(String password) {
