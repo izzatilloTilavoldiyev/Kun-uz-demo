@@ -27,7 +27,7 @@ public class RegionServiceImpl implements RegionService{
         Region savedRegion = regionRepository.save(mappedRegion);
         return modelMapper.map(savedRegion, RegionResponseDTO.class);
     }
-
+    
     @Override
     public RegionResponseDTO getByID(UUID regionID) {
         return modelMapper.map(getRegionByID(regionID), RegionResponseDTO.class);
