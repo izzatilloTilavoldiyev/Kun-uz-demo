@@ -39,8 +39,11 @@ public class User extends BaseEntity implements UserDetails {
     private UserStatus status;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "media_id", nullable = false)
+    @JoinColumn(name = "media_id")
     private Media media;
+
+    @Embedded
+    private VerificationData verificationData;
 
     private boolean deleted;
 
