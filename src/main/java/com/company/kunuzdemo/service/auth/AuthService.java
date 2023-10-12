@@ -16,4 +16,6 @@ public interface AuthService {
 
     TokenDTO login(LoginDTO loginDTO);
 
+    String forgotPassword(String email);
+
 }
