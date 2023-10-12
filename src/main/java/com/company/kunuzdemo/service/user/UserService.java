@@ -1,5 +1,6 @@
 package com.company.kunuzdemo.service.user;
 
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.User;
 import org.springframework.data.domain.Page;
@@ -14,4 +15,6 @@ public interface UserService {
     Page<UserResponseDTO> getAll(int page, int size);
 
     Page<UserResponseDTO> filterByRole(int page, int size, String role);
+
+    String updatePassword(PasswordUpdateDTO passwordUpdateDTO);
 }

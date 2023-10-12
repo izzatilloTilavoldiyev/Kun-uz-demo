@@ -1,5 +1,6 @@
 package com.company.kunuzdemo.service.user;
 
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.User;
 import com.company.kunuzdemo.enums.UserRole;
@@ -54,6 +55,11 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Enum type not valid: " + role);
         }
 
+    }
+
+    @Override
+    public String updatePassword(PasswordUpdateDTO passwordUpdateDTO) {
+        return null;
     }
 
     private User findById(UUID id) {

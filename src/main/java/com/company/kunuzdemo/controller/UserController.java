@@ -1,5 +1,6 @@
 package com.company.kunuzdemo.controller;
 
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.service.user.UserService;
 import jakarta.validation.Valid;
@@ -39,5 +40,12 @@ public class UserController {
         return ResponseEntity.ok(userService.filterByRole(page, size, role));
     }
 
+    @PutMapping("/update-password")
+    public ResponseEntity<String> updatePassword(
+            @Valid @RequestBody PasswordUpdateDTO passwordUpdateDTO
+    ) {
+        String response = userService.updatePassword(passwordUpdateDTO);
+        return ResponseEntity.ok(response);
+    }
 
 }
