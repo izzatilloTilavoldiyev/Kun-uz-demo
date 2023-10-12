@@ -156,4 +156,5 @@ public class AuthServiceImpl implements AuthService{
             throw new BadRequestException("User unverified");
         return user;
     }
+
 }

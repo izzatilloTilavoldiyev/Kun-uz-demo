@@ -2,7 +2,6 @@ package com.company.kunuzdemo.repository;
 
 import com.company.kunuzdemo.entity.User;
 import com.company.kunuzdemo.enums.UserRole;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
