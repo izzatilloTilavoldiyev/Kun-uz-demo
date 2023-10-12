@@ -14,8 +14,8 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    @Query("from users u where u.role =: userRole")
-    Page<User> filterByRole(@Param("userRole") @NotNull UserRole userRole, Pageable pageable);
+    @Query("select u from users u where u.role = :userRole")
+    Page<User> filterByRole(@Param("userRole") UserRole userRole, Pageable pageable);
 
     Optional<User> findByEmail(String email);
 
