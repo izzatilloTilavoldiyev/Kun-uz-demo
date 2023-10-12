@@ -1,5 +1,6 @@
 package com.company.kunuzdemo.service.user;
 
+import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.User;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,8 @@ public interface UserService {
     String unblockById(UUID userId);
 
     UserResponseDTO changeRole(UUID userId, String role);
+
+    UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto);
 
     String deleteById(UUID userId);
 }

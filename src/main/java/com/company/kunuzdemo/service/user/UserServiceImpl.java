@@ -1,9 +1,12 @@
 package com.company.kunuzdemo.service.user;
 
+import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
+import com.company.kunuzdemo.entity.Media;
 import com.company.kunuzdemo.entity.User;
 import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.exception.DataNotFoundException;
+import com.company.kunuzdemo.repository.MediaRepository;
 import com.company.kunuzdemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -24,6 +27,7 @@ import static com.company.kunuzdemo.enums.UserStatus.BLOCKED;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final MediaRepository mediaRepository;
 
     @Override
     public UserResponseDTO getById(UUID id) {
@@ -58,7 +62,6 @@ public class UserServiceImpl implements UserService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Enum type not valid: " + role);
         }
-
     }
 
     private User findById(UUID id) {
@@ -93,6 +96,22 @@ public class UserServiceImpl implements UserService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Enum type not valid: " + role);
         }
+    }
+
+    @Override
+    public UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto) {
+        User user = findById(userId);
+
+        if(dto.getMedia() != null) {
+            Media media = mediaRepository.findById(user.getMedia().getId()).orElseThrow(
+                    () -> new DataNotFoundException("media not found"));
+            modelMapper.map(dto.getMedia(), media);
+            user.setMedia(media);
+        }
+
+        modelMapper.map(dto, user);
+        User updatedUser = userRepository.save(user);
+        return modelMapper.map(updatedUser, UserResponseDTO.class);
     }
 
     @Override
