@@ -16,13 +16,18 @@ public class MailSenderService {
     private String sender;
 
     public String sendVerificationCode(String email, String verificationCode) {
-        String message = "This is your verification code: " + verificationCode;
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom(sender);
-        simpleMailMessage.setTo(email);
-        simpleMailMessage.setText(message);
-        mailSender.send(simpleMailMessage);
-        return "Verification code sent successfully";
+        try {
+            String message = "This is your verification code: " + verificationCode;
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setFrom(sender);
+            simpleMailMessage.setTo(email);
+            simpleMailMessage.setText(message);
+            mailSender.send(simpleMailMessage);
+            return "Verification code sent successfully";
+        } catch (Exception e) {
+            return "Email to send the verification code";
+        }
+
     }
 
 }

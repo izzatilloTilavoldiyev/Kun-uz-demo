@@ -8,6 +8,8 @@ import com.company.kunuzdemo.dtos.response.TokenDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.service.auth.AuthService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +52,13 @@ public class AuthController {
     ) {
         TokenDTO login = authService.login(loginDTO);
         return ResponseEntity.ok(login);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(
+            @RequestParam @Email @NotBlank String email
+    ) {
+        String response = authService.forgotPassword(email);
+        return ResponseEntity.ok(response);
     }
 }

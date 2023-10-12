@@ -47,8 +47,13 @@ public class UserServiceImpl implements UserService {
     public Page<UserResponseDTO> filterByRole(int page, int size, String role) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
-        return modelMapper.map(userRepository.filterByRole(UserRole.valueOf(role), pageable),
-                new TypeToken<Page<UserResponseDTO>>() {}.getType());
+        try {
+            return modelMapper.map(userRepository.filterByRole(UserRole.valueOf(role), pageable),
+                    new TypeToken<Page<UserResponseDTO>>() {}.getType());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Enum type not valid: " + role);
+        }
+
     }
 
     private User findById(UUID id) {

@@ -20,6 +20,7 @@ public class UserResponseDTO {
 
     private String email;
 
+    @JsonIgnore
     private String password;
 
     private UserRole role;

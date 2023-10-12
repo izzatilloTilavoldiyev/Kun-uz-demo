@@ -12,6 +12,7 @@ import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.enums.UserStatus;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.exception.UserPasswordWrongException;
+import com.company.kunuzdemo.repository.BadRequestException;
 import com.company.kunuzdemo.repository.UserRepository;
 import com.company.kunuzdemo.service.mail.MailSenderService;
 import com.company.kunuzdemo.service.user.UserService;
@@ -46,7 +47,7 @@ public class AuthServiceImpl implements AuthService{
         user.setRole(UserRole.USER);
         user.setStatus(UserStatus.UNVERIFIED);
         user.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
-        user.setVerificationData(generateVerificationCode());
+        user.setVerificationData(generateVerificationData());
         User savedUser = userRepository.save(user);
         String message = mailSenderService.sendVerificationCode(user.getEmail(),
                 savedUser.getVerificationData().getVerificationCode());
@@ -67,7 +68,7 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public String newVerifyCode(String email) {
         User user = userService.getUserByEmail(email);
-        user.setVerificationData(generateVerificationCode());
+        user.setVerificationData(generateVerificationData());
         userRepository.save(user);
         return mailSenderService.sendVerificationCode(email, user.getVerificationData().getVerificationCode());
     }
@@ -76,6 +77,8 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public TokenDTO login(LoginDTO loginDTO) {
         User user = userService.getUserByEmail(loginDTO.getEmail());
+        if (user.getStatus().equals(UserStatus.UNVERIFIED))
+            throw new BadRequestException("User unverified");
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword()))
             throw new UserPasswordWrongException("User password wrong with Password: " + loginDTO.getPassword());
         authenticationManager.authenticate(
@@ -85,6 +88,14 @@ public class AuthServiceImpl implements AuthService{
                 )
         );
         return jwtService.generateToken(user.getEmail());
+    }
+
+    @Override
+    public String forgotPassword(String email) {
+        User user = userService.getUserByEmail(email);
+        user.setVerificationData(generateVerificationData());
+        userRepository.save(user);
+        return mailSenderService.sendVerificationCode(email, user.getVerificationData().getVerificationCode());
     }
 
     private void checkEmailUnique(String email) {
@@ -105,7 +116,7 @@ public class AuthServiceImpl implements AuthService{
         }
     }
 
-    private VerificationData generateVerificationCode() {
+    private VerificationData generateVerificationData() {
         Random random = new Random();
         String verificationCode = String.valueOf(random.nextInt(100000, 1000000));
         return new VerificationData(verificationCode, LocalDateTime.now());

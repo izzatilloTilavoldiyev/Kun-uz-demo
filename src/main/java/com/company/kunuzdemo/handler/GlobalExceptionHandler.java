@@ -4,6 +4,7 @@ import com.company.kunuzdemo.dtos.response.AppErrorDTO;
 import com.company.kunuzdemo.exception.DataNotFoundException;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.exception.UserPasswordWrongException;
+import com.company.kunuzdemo.repository.BadRequestException;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -88,6 +89,26 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserPasswordWrongException.class)
     public ResponseEntity<AppErrorDTO> userPasswordWrongExceptionHandler(RuntimeException e, HttpServletRequest request) {
+        AppErrorDTO errorDTO = new AppErrorDTO(
+                request.getRequestURI(),
+                e.getMessage(),
+                400
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<AppErrorDTO> illegalArgumentExceptionHandler(RuntimeException e, HttpServletRequest request) {
+        AppErrorDTO errorDTO = new AppErrorDTO(
+                request.getRequestURI(),
+                e.getMessage(),
+                400
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<AppErrorDTO> badRequestExceptionHandler(RuntimeException e, HttpServletRequest request) {
         AppErrorDTO errorDTO = new AppErrorDTO(
                 request.getRequestURI(),
                 e.getMessage(),
