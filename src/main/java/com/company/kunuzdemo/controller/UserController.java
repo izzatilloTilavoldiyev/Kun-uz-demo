@@ -1,13 +1,17 @@
 package com.company.kunuzdemo.controller;
 
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
+import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.service.user.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserResponseDTO>> getAll(
+    public ResponseEntity<List<UserResponseDTO>> getAll(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
@@ -31,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/filter-by-role")
-    public ResponseEntity<Page<UserResponseDTO>> filterByRole(
+    public ResponseEntity<List<UserResponseDTO>> filterByRole(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam String role
@@ -39,5 +43,21 @@ public class UserController {
         return ResponseEntity.ok(userService.filterByRole(page, size, role));
     }
 
+    @GetMapping("/block/{userId}")
+    public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
+       return ResponseEntity.ok(userService.blocById(userId));
+    }
 
+    @GetMapping("/unblock/{userId}")
+    public ResponseEntity<String> unblockById(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userService.unblockById(userId));
+    }
+
+    @PutMapping("/change-role/{userId}")
+    public ResponseEntity<UserResponseDTO> changeRole(
+            @PathVariable @NotNull UUID userId,
+            @RequestParam @NotBlank String role
+    ) {
+        return ResponseEntity.ok(userService.changeRole(userId, role));
+    }
 }
