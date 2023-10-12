@@ -1,6 +1,7 @@
 package com.company.kunuzdemo.controller;
 
 import com.company.kunuzdemo.dtos.request.LoginDTO;
+import com.company.kunuzdemo.dtos.request.ResetPasswordDTO;
 import com.company.kunuzdemo.dtos.request.UserCreateDTO;
 import com.company.kunuzdemo.dtos.request.VerifyDTO;
 import com.company.kunuzdemo.dtos.response.AuthResponseDTO;
@@ -30,6 +31,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
+
     @PostMapping("/verify")
     public ResponseEntity<String> verify(
             @Valid @RequestBody VerifyDTO verifyDTO
@@ -37,6 +39,7 @@ public class AuthController {
         String response = authService.verify(verifyDTO.getEmail(), verifyDTO.getVerificationCode());
         return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/new-verification-code")
     public ResponseEntity<String> newVerificationCode(
@@ -46,6 +49,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+
     @PostMapping("/sing-in")
     public ResponseEntity<TokenDTO> signIn(
             @Valid @RequestBody LoginDTO loginDTO
@@ -54,11 +58,23 @@ public class AuthController {
         return ResponseEntity.ok(login);
     }
 
+
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(
-            @RequestParam @Email @NotBlank String email
+            @RequestParam @Email String email
     ) {
         String response = authService.forgotPassword(email);
         return ResponseEntity.ok(response);
     }
+
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(
+            @Valid @RequestBody ResetPasswordDTO resetPasswordDTO
+    ) {
+        String response = authService.resetPassword(resetPasswordDTO);
+        return ResponseEntity.ok(response);
+    }
+
+
 }
