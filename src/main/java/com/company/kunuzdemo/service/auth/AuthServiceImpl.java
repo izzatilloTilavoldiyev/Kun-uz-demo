@@ -2,6 +2,7 @@ package com.company.kunuzdemo.service.auth;
 
 import com.company.kunuzdemo.config.jwt.JwtService;
 import com.company.kunuzdemo.dtos.request.LoginDTO;
+import com.company.kunuzdemo.dtos.request.ResetPasswordDTO;
 import com.company.kunuzdemo.dtos.request.UserCreateDTO;
 import com.company.kunuzdemo.dtos.response.AuthResponseDTO;
 import com.company.kunuzdemo.dtos.response.TokenDTO;
@@ -39,6 +40,7 @@ public class AuthServiceImpl implements AuthService{
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+
     @Override
     public AuthResponseDTO<UserResponseDTO> create(UserCreateDTO userCreateDTO) {
         checkEmailUnique(userCreateDTO.getEmail());
@@ -55,6 +57,7 @@ public class AuthServiceImpl implements AuthService{
         return new AuthResponseDTO<>(message, mappedUser);
     }
 
+
     @Override
     public String verify(String email, String verificationCode) {
         User user = userService.getUserByEmail(email);
@@ -65,6 +68,7 @@ public class AuthServiceImpl implements AuthService{
         return "Successfully verified";
     }
 
+
     @Override
     public String newVerifyCode(String email) {
         User user = userService.getUserByEmail(email);
@@ -73,12 +77,11 @@ public class AuthServiceImpl implements AuthService{
         return mailSenderService.sendVerificationCode(email, user.getVerificationData().getVerificationCode());
     }
 
+
     //todo: check delete user
     @Override
     public TokenDTO login(LoginDTO loginDTO) {
-        User user = userService.getUserByEmail(loginDTO.getEmail());
-        if (user.getStatus().equals(UserStatus.UNVERIFIED))
-            throw new BadRequestException("User unverified");
+        User user = getActiveUserByEmail(loginDTO.getEmail());
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword()))
             throw new UserPasswordWrongException("User password wrong with Password: " + loginDTO.getPassword());
         authenticationManager.authenticate(
@@ -90,18 +93,33 @@ public class AuthServiceImpl implements AuthService{
         return jwtService.generateToken(user.getEmail());
     }
 
+
     @Override
     public String forgotPassword(String email) {
-        User user = userService.getUserByEmail(email);
+        User user = getActiveUserByEmail(email);
         user.setVerificationData(generateVerificationData());
         userRepository.save(user);
         return mailSenderService.sendVerificationCode(email, user.getVerificationData().getVerificationCode());
     }
 
+
+    @Override
+    public String resetPassword(ResetPasswordDTO resetPasswordDTO) {
+        User user = getActiveUserByEmail(resetPasswordDTO.getEmail());
+        if (checkVerificationCodeAndExpiration(user.getVerificationData(), resetPasswordDTO.getVerificationCode()))
+            return "Verification code wrong";
+        checkUserPasswordAndIsValid(resetPasswordDTO.getNewPassword(), resetPasswordDTO.getConfirmPassword());
+        user.setPassword(resetPasswordDTO.getNewPassword());
+        userRepository.save(user);
+        return "Password successfully changed";
+    }
+
+
     private void checkEmailUnique(String email) {
         if (userRepository.existsUserByEmail(email))
             throw new DuplicateValueException("User already exists with Email: " + email);
     }
+
 
     private void checkUserPasswordAndIsValid(String password, String confirmPassword) {
         if (!Objects.equals(password, confirmPassword))
@@ -109,12 +127,14 @@ public class AuthServiceImpl implements AuthService{
         checkPasswordIsValid(password);
     }
 
+
     private void checkPasswordIsValid(String password) {
-        String passwordRegex = "^ (?=.* [0-9]) (?=.* [a-z]) (?=.* [A-Z]) (?=.* #$%^&-+= ()]) (?=\\S+$). {8,20}$";
+        String passwordRegex = "^(?=.*[a-zA-Z])(?=.*\\d).{8,20}$";
         if (!password.matches(passwordRegex)) {
             throw new IllegalArgumentException("Invalid password: " + password);
         }
     }
+
 
     private VerificationData generateVerificationData() {
         Random random = new Random();
@@ -122,9 +142,18 @@ public class AuthServiceImpl implements AuthService{
         return new VerificationData(verificationCode, LocalDateTime.now());
     }
 
-    public boolean checkVerificationCodeAndExpiration(VerificationData verificationData, String verificationCode) {
-        return !verificationData.getVerificationDate().plusMinutes(3).isAfter(LocalDateTime.now())
-                || !Objects.equals(verificationData.getVerificationCode(), verificationCode);
 
+    public boolean checkVerificationCodeAndExpiration(VerificationData verificationData, String verificationCode) {
+        if (!verificationData.getVerificationDate().plusMinutes(100).isAfter(LocalDateTime.now()))
+            throw new BadRequestException("Verification code expired");
+        return !Objects.equals(verificationData.getVerificationCode(), verificationCode);
+    }
+
+
+    private User getActiveUserByEmail(String email) {
+        User user = userService.getUserByEmail(email);
+        if (user.getStatus().equals(UserStatus.UNVERIFIED))
+            throw new BadRequestException("User unverified");
+        return user;
     }
 }
