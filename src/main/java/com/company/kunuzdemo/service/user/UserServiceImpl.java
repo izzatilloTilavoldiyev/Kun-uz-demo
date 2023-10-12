@@ -95,4 +95,12 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Enum type not valid: " + role);
         }
     }
+
+    @Override
+    public String deleteById(UUID userId) {
+        User user = findById(userId);
+        user.setDeleted(false);
+        userRepository.save(user);
+        return "user deleted";
+    }
 }

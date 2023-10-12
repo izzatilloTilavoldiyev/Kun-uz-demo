@@ -21,4 +21,6 @@ public interface UserService {
     String unblockById(UUID userId);
 
     UserResponseDTO changeRole(UUID userId, String role);
+
+    String deleteById(UUID userId);
 }

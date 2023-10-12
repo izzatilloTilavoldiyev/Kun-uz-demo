@@ -60,4 +60,9 @@ public class UserController {
     ) {
         return ResponseEntity.ok(userService.changeRole(userId, role));
     }
+
+    @DeleteMapping("/delete/{userId}")
+    ResponseEntity<String> deleteById(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userService.deleteById(userId));
+    }
 }
