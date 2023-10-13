@@ -5,6 +5,7 @@ import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.service.user.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
+    @GetMapping("/search-by-email")
+    public ResponseEntity<UserResponseDTO> searchByEmail(@RequestParam @Email String email) {
+        return ResponseEntity.ok(userService.getByEmail(email));
+    }
+
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAll(
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -44,9 +50,10 @@ public class UserController {
         return ResponseEntity.ok(userService.filterByRole(page, size, role));
     }
 
+
     @GetMapping("/block/{userId}")
     public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
-       return ResponseEntity.ok(userService.blocById(userId));
+        return ResponseEntity.ok(userService.blocById(userId));
     }
 
     @GetMapping("/unblock/{userId}")
@@ -69,8 +76,15 @@ public class UserController {
     ) {
         return ResponseEntity.ok(userService.updateProfile(userId, dto));
     }
+
     @DeleteMapping("/delete/{userId}")
     ResponseEntity<String> deleteById(@PathVariable @NotNull UUID userId) {
         return ResponseEntity.ok(userService.deleteById(userId));
+    }
+
+    @DeleteMapping("/delete-selected")
+    public ResponseEntity<String> deleteSelected(@Valid @RequestParam List<UUID> userIds) {
+        userService.deleteSelectedUsers(userIds);
+        return ResponseEntity.ok("Successfully deleted!");
     }
 }

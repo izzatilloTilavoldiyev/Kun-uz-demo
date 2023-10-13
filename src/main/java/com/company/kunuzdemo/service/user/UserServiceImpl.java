@@ -43,12 +43,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponseDTO getByEmail(String email) {
+        return modelMapper.map(getUserByEmail(email), UserResponseDTO.class);
+    }
+
+    @Override
     public List<UserResponseDTO> getAll(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
         List<User> users = userRepository.findAll(true, pageable);
-        return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {
-        }.getType());
+        return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {}.getType());
     }
 
     @Override
@@ -102,7 +106,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto) {
         User user = findById(userId);
 
-        if(dto.getMedia() != null) {
+        if (dto.getMedia() != null) {
             Media media = mediaRepository.findById(user.getMedia().getId()).orElseThrow(
                     () -> new DataNotFoundException("media not found"));
             modelMapper.map(dto.getMedia(), media);
@@ -120,5 +124,13 @@ public class UserServiceImpl implements UserService {
         user.setDeleted(false);
         userRepository.save(user);
         return "user deleted";
+    }
+
+    @Override
+    public void deleteSelectedUsers(List<UUID> userIds) {
+        for (UUID userId : userIds) {
+            findById(userId);
+            deleteById(userId);
+        }
     }
 }

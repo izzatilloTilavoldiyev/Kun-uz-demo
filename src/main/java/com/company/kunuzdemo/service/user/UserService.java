@@ -14,6 +14,8 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
+    UserResponseDTO getByEmail(String email);
+
     List<UserResponseDTO> getAll(int page, int size);
 
     List<UserResponseDTO> filterByRole(int page, int size, String role);
@@ -27,4 +29,6 @@ public interface UserService {
     UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto);
 
     String deleteById(UUID userId);
+
+    void deleteSelectedUsers(List<UUID> userIds);
 }
