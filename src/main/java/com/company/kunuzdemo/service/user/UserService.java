@@ -1,5 +1,6 @@
 package com.company.kunuzdemo.service.user;
 
+import com.company.kunuzdemo.dtos.request.ChangeRoleDTO;
 import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.User;
@@ -24,7 +25,7 @@ public interface UserService {
 
     String unblockById(UUID userId);
 
-    UserResponseDTO changeRole(UUID userId, String role);
+    UserResponseDTO changeRole(ChangeRoleDTO roleDTO);
 
     UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto);
 

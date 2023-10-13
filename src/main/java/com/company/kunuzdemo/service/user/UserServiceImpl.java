@@ -1,5 +1,6 @@
 package com.company.kunuzdemo.service.user;
 
+import com.company.kunuzdemo.dtos.request.ChangeRoleDTO;
 import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.Media;
@@ -52,17 +53,18 @@ public class UserServiceImpl implements UserService {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
         List<User> users = userRepository.findAll(true, pageable);
-        return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {}.getType());
+        return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {
+        }.getType());
     }
 
     @Override
     public List<UserResponseDTO> filterByRole(int page, int size, String role) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
-        List<User> users = userRepository.filterByRole(UserRole.valueOf(role), pageable).getContent();
+
         try {
-            return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {
-            }.getType());
+            List<User> users = userRepository.filterByRole(UserRole.valueOf(role), pageable).getContent();
+            return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {}.getType());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Enum type not valid: " + role);
         }
@@ -91,14 +93,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO changeRole(UUID userId, String role) {
-        User user = findById(userId);
-        user.setRole(UserRole.valueOf(role));
+    public UserResponseDTO changeRole(ChangeRoleDTO roleDTO) {
+        User user = findById(roleDTO.getUserId());
 
         try {
+            user.setRole(UserRole.valueOf(roleDTO.getRole()));
             return modelMapper.map(userRepository.save(user), UserResponseDTO.class);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Enum type not valid: " + role);
+            throw new IllegalArgumentException("Enum type not valid: " + roleDTO.getRole());
         }
     }
 
@@ -106,10 +108,9 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto) {
         User user = findById(userId);
 
-        if (dto.getMedia() != null) {
-            Media media = mediaRepository.findById(user.getMedia().getId()).orElseThrow(
+        if (dto.getMediaId() != null) {
+            Media media = mediaRepository.findById(dto.getMediaId()).orElseThrow(
                     () -> new DataNotFoundException("media not found"));
-            modelMapper.map(dto.getMedia(), media);
             user.setMedia(media);
         }
 
