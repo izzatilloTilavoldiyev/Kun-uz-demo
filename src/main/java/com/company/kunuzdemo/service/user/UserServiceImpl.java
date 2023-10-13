@@ -70,12 +70,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String blocById(UUID userId) {
+    public String blockById(UUID userId) {
         User user = findById(userId);
         user.setStatus(BLOCKED);
         userRepository.save(user);
         return "user blocked";
-
     }
 
     @Override
@@ -104,7 +103,7 @@ public class UserServiceImpl implements UserService {
 
         if(dto.getMedia() != null) {
             Media media = mediaRepository.findById(user.getMedia().getId()).orElseThrow(
-                    () -> new DataNotFoundException("media not found"));
+                    () -> new DataNotFoundException("Media not found with ID: " + dto.getMedia()));
             modelMapper.map(dto.getMedia(), media);
             user.setMedia(media);
         }
