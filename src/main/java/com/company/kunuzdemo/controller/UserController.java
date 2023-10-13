@@ -1,5 +1,6 @@
 package com.company.kunuzdemo.controller;
 
+import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.service.user.UserService;
@@ -59,5 +60,17 @@ public class UserController {
             @RequestParam @NotBlank String role
     ) {
         return ResponseEntity.ok(userService.changeRole(userId, role));
+    }
+
+    @PutMapping("/update-profile/{userId}")
+    public ResponseEntity<UserResponseDTO> updateProfile(
+            @PathVariable @NotNull UUID userId,
+            @RequestBody @Valid UserUpdateProfileDTO dto
+    ) {
+        return ResponseEntity.ok(userService.updateProfile(userId, dto));
+    }
+    @DeleteMapping("/delete/{userId}")
+    ResponseEntity<String> deleteById(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userService.deleteById(userId));
     }
 }
