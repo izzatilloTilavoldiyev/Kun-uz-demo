@@ -1,13 +1,11 @@
 package com.company.kunuzdemo.controller;
 
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
-import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.service.user.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
