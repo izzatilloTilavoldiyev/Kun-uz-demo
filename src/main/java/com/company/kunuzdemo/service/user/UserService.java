@@ -17,7 +17,7 @@ public interface UserService {
 
     List<UserResponseDTO> filterByRole(int page, int size, String role);
 
-    String blocById(UUID userId);
+    String blockById(UUID userId);
 
     String unblockById(UUID userId);
 

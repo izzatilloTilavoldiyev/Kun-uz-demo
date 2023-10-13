@@ -43,8 +43,8 @@ public class UserController {
     }
 
     @GetMapping("/block/{userId}")
-    public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
-       return ResponseEntity.ok(userService.blocById(userId));
+    public ResponseEntity<String> blockById(@PathVariable @NotNull UUID userId) {
+       return ResponseEntity.ok(userService.blockById(userId));
     }
 
     @GetMapping("/unblock/{userId}")
@@ -67,6 +67,7 @@ public class UserController {
     ) {
         return ResponseEntity.ok(userService.updateProfile(userId, dto));
     }
+
     @DeleteMapping("/delete/{userId}")
     ResponseEntity<String> deleteById(@PathVariable @NotNull UUID userId) {
         return ResponseEntity.ok(userService.deleteById(userId));

@@ -4,7 +4,7 @@ import com.company.kunuzdemo.dtos.response.AppErrorDTO;
 import com.company.kunuzdemo.exception.DataNotFoundException;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.exception.UserPasswordWrongException;
-import com.company.kunuzdemo.repository.BadRequestException;
+import com.company.kunuzdemo.exception.BadRequestException;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
