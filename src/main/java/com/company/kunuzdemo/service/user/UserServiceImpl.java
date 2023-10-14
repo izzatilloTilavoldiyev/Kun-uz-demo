@@ -38,12 +38,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
-    @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(
-                () -> new DataNotFoundException("User not found with Email: " + email)
-        );
-    }
+
 
 
     @Override
@@ -59,7 +54,7 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDTO> getAll(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
-        List<User> users = userRepository.findAll(true, pageable);
+        List<User> users = userRepository.findAll(pageable).getContent();
         return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {
         }.getType());
     }
@@ -75,27 +70,6 @@ public class UserServiceImpl implements UserService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Enum type not valid: " + role);
         }
-    }
-
-    private User findById(UUID id) {
-        return userRepository.findById(id).orElseThrow(
-                () -> new DataNotFoundException("user not found with ID: " + id));
-    }
-
-    @Override
-    public String blockById(UUID userId) {
-        User user = findById(userId);
-        user.setStatus(BLOCKED);
-        userRepository.save(user);
-        return "user blocked";
-    }
-
-    @Override
-    public String unblockById(UUID userId) {
-        User user = findById(userId);
-        user.setStatus(ACTIVE);
-        userRepository.save(user);
-        return "user unblocked";
     }
 
     @Override
@@ -126,9 +100,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new DataNotFoundException("User not found with Email: " + email)
+        );
+    }
+
+    private User findById(UUID id) {
+        return userRepository.getUserById(id).orElseThrow(
+                () -> new DataNotFoundException("user not found with ID: " + id));
+    }
+
+    @Override
+    public String blockById(UUID userId) {
+        User user = findById(userId);
+        user.setStatus(BLOCKED);
+        userRepository.save(user);
+        return "user blocked";
+    }
+
+    @Override
+    public String unblockById(UUID userId) {
+        User user = findById(userId);
+        user.setStatus(ACTIVE);
+        userRepository.save(user);
+        return "user unblocked";
+    }
+
+
+    @Override
     public String deleteById(UUID userId) {
         User user = findById(userId);
-        user.setDeleted(false);
+        user.setDeleted(true);
         userRepository.save(user);
         return "user deleted";
     }
