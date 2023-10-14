@@ -1,6 +1,7 @@
 package com.company.kunuzdemo.controller;
 
 import com.company.kunuzdemo.dtos.request.ChangeRoleDTO;
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.service.user.UserService;
@@ -28,8 +29,12 @@ public class UserController {
     }
 
     @GetMapping("/search-by-email")
-    public ResponseEntity<UserResponseDTO> searchByEmail(@RequestParam @Email String email) {
-        return ResponseEntity.ok(userService.getByEmail(email));
+    public ResponseEntity<List<UserResponseDTO>> searchByEmail(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam @Email String email
+    ) {
+        return ResponseEntity.ok(userService.searchByEmail(email, page, size));
     }
 
     @GetMapping
@@ -73,6 +78,7 @@ public class UserController {
     ) {
         return ResponseEntity.ok(userService.updateProfile(userId, dto));
     }
+
 
     @DeleteMapping("/delete/{userId}")
     ResponseEntity<String> deleteById(@PathVariable @NotNull UUID userId) {

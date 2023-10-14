@@ -1,6 +1,7 @@
 package com.company.kunuzdemo.service.user;
 
 import com.company.kunuzdemo.dtos.request.ChangeRoleDTO;
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.User;
@@ -14,7 +15,7 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
-    UserResponseDTO getByEmail(String email);
+    List<UserResponseDTO> searchByEmail(String email, Integer page, Integer size);
 
     List<UserResponseDTO> getAll(int page, int size);
 
