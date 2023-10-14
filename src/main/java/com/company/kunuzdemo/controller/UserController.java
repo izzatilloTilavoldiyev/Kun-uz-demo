@@ -51,7 +51,7 @@ public class UserController {
 
     @PutMapping("/block/{userId}")
     public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
-        return ResponseEntity.ok(userService.blocById(userId));
+        return ResponseEntity.ok(userService.blockById(userId));
     }
 
     @PutMapping("/unblock/{userId}")

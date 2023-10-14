@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
 
         if (dto.getMediaId() != null) {
             Media media = mediaRepository.findById(dto.getMediaId()).orElseThrow(
-                    () -> new DataNotFoundException("Media not found with ID: " + dto.getMedia()));
+                    () -> new DataNotFoundException("Media not found with ID: " + dto.getMediaId()));
             user.setMedia(media);
         }
 
