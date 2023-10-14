@@ -12,6 +12,7 @@ import com.company.kunuzdemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDTO> getAll(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
-        List<User> users = userRepository.findAll(true, pageable);
+        List<User> users = userRepository.findAll(pageable).getContent();
         return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {
         }.getType());
     }
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User findById(UUID id) {
-        return userRepository.findById(id).orElseThrow(
+        return userRepository.getUserById(id).orElseThrow(
                 () -> new DataNotFoundException("user not found with ID: " + id));
     }
 
@@ -121,7 +122,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String deleteById(UUID userId) {
         User user = findById(userId);
-        user.setDeleted(false);
+        if(user.isDeleted()) {
+            return "user is deleted";
+        }
+        user.setDeleted(true);
         userRepository.save(user);
         return "user deleted";
     }
