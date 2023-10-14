@@ -3,6 +3,7 @@ package com.company.kunuzdemo.service.category;
 import com.company.kunuzdemo.dtos.request.CategoryCreateDTO;
 import com.company.kunuzdemo.dtos.response.CategoryResponseDTO;
 import com.company.kunuzdemo.dtos.request.CategoryUpdateDTO;
+import com.company.kunuzdemo.entity.Category;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,4 +24,5 @@ public interface CategoryService {
     void deleteById(UUID categoryId);
 
     void deleteSelectedCategories(List<UUID> categoryIDs);
+    Category getCategoryById(UUID categoryId);
 }

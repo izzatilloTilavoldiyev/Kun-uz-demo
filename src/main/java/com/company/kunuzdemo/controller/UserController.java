@@ -1,9 +1,11 @@
 package com.company.kunuzdemo.controller;
 
+import com.company.kunuzdemo.dtos.request.ChangeRoleDTO;
 import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.service.user.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +23,13 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getById(@PathVariable @Valid UUID id) {
+    public ResponseEntity<UserResponseDTO> getById(@PathVariable @NotNull UUID id) {
         return ResponseEntity.ok(userService.getById(id));
+    }
+
+    @GetMapping("/search-by-email")
+    public ResponseEntity<UserResponseDTO> searchByEmail(@RequestParam @Email String email) {
+        return ResponseEntity.ok(userService.getByEmail(email));
     }
 
     @GetMapping
@@ -42,22 +49,21 @@ public class UserController {
         return ResponseEntity.ok(userService.filterByRole(page, size, role));
     }
 
-    @GetMapping("/block/{userId}")
-    public ResponseEntity<String> blockById(@PathVariable @NotNull UUID userId) {
-       return ResponseEntity.ok(userService.blockById(userId));
+    @PutMapping("/block/{userId}")
+    public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userService.blocById(userId));
     }
 
-    @GetMapping("/unblock/{userId}")
+    @PutMapping("/unblock/{userId}")
     public ResponseEntity<String> unblockById(@PathVariable @NotNull UUID userId) {
         return ResponseEntity.ok(userService.unblockById(userId));
     }
 
-    @PutMapping("/change-role/{userId}")
+    @PutMapping("/change-role")
     public ResponseEntity<UserResponseDTO> changeRole(
-            @PathVariable @NotNull UUID userId,
-            @RequestParam @NotBlank String role
+            @RequestBody @Valid ChangeRoleDTO role
     ) {
-        return ResponseEntity.ok(userService.changeRole(userId, role));
+        return ResponseEntity.ok(userService.changeRole(role));
     }
 
     @PutMapping("/update-profile/{userId}")
@@ -71,5 +77,11 @@ public class UserController {
     @DeleteMapping("/delete/{userId}")
     ResponseEntity<String> deleteById(@PathVariable @NotNull UUID userId) {
         return ResponseEntity.ok(userService.deleteById(userId));
+    }
+
+    @DeleteMapping("/delete-selected")
+    public ResponseEntity<String> deleteSelected(@Valid @RequestParam List<UUID> userIds) {
+        userService.deleteSelectedUsers(userIds);
+        return ResponseEntity.ok("Successfully deleted!");
     }
 }

@@ -28,7 +28,7 @@ public class CategoryController {
     }
 
     @GetMapping("/get-by-id/{categoryId}")
-    public ResponseEntity<CategoryResponseDTO> getById(@Valid @PathVariable @NotNull UUID categoryId) {
+    public ResponseEntity<CategoryResponseDTO> getById(@PathVariable @NotNull UUID categoryId) {
 
         return ResponseEntity.ok(categoryService.getById(categoryId));
     }
@@ -53,17 +53,17 @@ public class CategoryController {
 
     @PutMapping("/update/{categoryId}")
     public ResponseEntity<CategoryResponseDTO> updateById(
-            @NotNull
+
             @PathVariable
-            @Valid UUID categoryId,
-            @RequestBody CategoryUpdateDTO dto
+            @NotNull UUID categoryId,
+            @Valid @RequestBody CategoryUpdateDTO dto
     ) {
 
         return ResponseEntity.ok(categoryService.updateById(categoryId, dto));
     }
 
     @DeleteMapping("/delete/{categoryId}")
-    public ResponseEntity<String> delete(@Valid @PathVariable @NotNull UUID categoryId) {
+    public ResponseEntity<String> delete(@PathVariable @NotNull UUID categoryId) {
 
         categoryService.deleteById(categoryId);
         return ResponseEntity.ok("Successfully deleted!");
