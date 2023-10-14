@@ -17,9 +17,9 @@ public interface UserService {
 
     List<UserResponseDTO> searchByEmail(String email, Integer page, Integer size);
 
-    List<UserResponseDTO> getAll(int page, int size);
+    List<UserResponseDTO> getAll(Integer page, Integer size);
 
-    List<UserResponseDTO> filterByRole(int page, int size, String role);
+    List<UserResponseDTO> filterByRole(Integer page, Integer size, String role);
 
     String blockById(UUID userId);
 

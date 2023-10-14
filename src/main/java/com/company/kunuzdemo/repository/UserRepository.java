@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("from users u where not u.deleted and u.id = :userId")
     Optional<User> getUserById(@Param("userId") UUID id);
     @Query("from users u where not u.deleted")
-    Page<User> findAll(Pageable pageable);
+    Page<User> findAllUsers(Pageable pageable);
 
     @Query("select u from users u where u.role = :userRole")
     Page<User> filterByRole(@Param("userRole") UserRole userRole, Pageable pageable);

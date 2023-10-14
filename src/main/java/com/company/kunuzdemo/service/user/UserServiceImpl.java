@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.company.kunuzdemo.enums.UserStatus.ACTIVE;
@@ -51,16 +52,16 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<UserResponseDTO> getAll(int page, int size) {
+    public List<UserResponseDTO> getAll(Integer page, Integer size) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
-        List<User> users = userRepository.findAll(pageable).getContent();
+        List<User> users = userRepository.findAllUsers(pageable).getContent();
         return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {
         }.getType());
     }
 
     @Override
-    public List<UserResponseDTO> filterByRole(int page, int size, String role) {
+    public List<UserResponseDTO> filterByRole(Integer page, Integer size, String role) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
 
@@ -114,17 +115,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public String blockById(UUID userId) {
         User user = findById(userId);
+        if(user.getStatus().equals(BLOCKED)) {
+            return "User already blocked";
+        }
         user.setStatus(BLOCKED);
         userRepository.save(user);
-        return "user blocked";
+        return "User blocked";
     }
 
     @Override
     public String unblockById(UUID userId) {
         User user = findById(userId);
+        if(user.getStatus().equals(ACTIVE)) {
+            return "User already unblocked";
+        }
         user.setStatus(ACTIVE);
         userRepository.save(user);
-        return "user unblocked";
+        return "User unblocked";
     }
 
 
@@ -139,7 +146,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteSelectedUsers(List<UUID> userIds) {
         for (UUID userId : userIds) {
-            findById(userId);
             deleteById(userId);
         }
     }

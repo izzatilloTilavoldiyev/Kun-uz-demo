@@ -39,16 +39,16 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAll(
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "10") int size
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
     ) {
         return ResponseEntity.ok(userService.getAll(page, size));
     }
 
     @GetMapping("/filter-by-role")
     public ResponseEntity<List<UserResponseDTO>> filterByRole(
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size,
             @RequestParam String role
     ) {
         return ResponseEntity.ok(userService.filterByRole(page, size, role));
