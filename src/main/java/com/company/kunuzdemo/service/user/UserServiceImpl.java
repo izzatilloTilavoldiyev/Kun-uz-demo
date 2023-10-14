@@ -12,7 +12,6 @@ import com.company.kunuzdemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,12 +36,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
-    @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(
-                () -> new DataNotFoundException("User not found with Email: " + email)
-        );
-    }
+
 
     @Override
     public UserResponseDTO getByEmail(String email) {
@@ -69,27 +63,6 @@ public class UserServiceImpl implements UserService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Enum type not valid: " + role);
         }
-    }
-
-    private User findById(UUID id) {
-        return userRepository.getUserById(id).orElseThrow(
-                () -> new DataNotFoundException("user not found with ID: " + id));
-    }
-
-    @Override
-    public String blockById(UUID userId) {
-        User user = findById(userId);
-        user.setStatus(BLOCKED);
-        userRepository.save(user);
-        return "user blocked";
-    }
-
-    @Override
-    public String unblockById(UUID userId) {
-        User user = findById(userId);
-        user.setStatus(ACTIVE);
-        userRepository.save(user);
-        return "user unblocked";
     }
 
     @Override
@@ -120,11 +93,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new DataNotFoundException("User not found with Email: " + email)
+        );
+    }
+
+    private User findById(UUID id) {
+        return userRepository.getUserById(id).orElseThrow(
+                () -> new DataNotFoundException("user not found with ID: " + id));
+    }
+
+    @Override
+    public String blockById(UUID userId) {
+        User user = findById(userId);
+        user.setStatus(BLOCKED);
+        userRepository.save(user);
+        return "user blocked";
+    }
+
+    @Override
+    public String unblockById(UUID userId) {
+        User user = findById(userId);
+        user.setStatus(ACTIVE);
+        userRepository.save(user);
+        return "user unblocked";
+    }
+
+
+    @Override
     public String deleteById(UUID userId) {
         User user = findById(userId);
-        if(user.isDeleted()) {
-            return "user is deleted";
-        }
         user.setDeleted(true);
         userRepository.save(user);
         return "user deleted";

@@ -12,21 +12,21 @@ public interface UserService {
 
     UserResponseDTO getById(UUID id);
 
-    User getUserByEmail(String email);
-
     UserResponseDTO getByEmail(String email);
 
     List<UserResponseDTO> getAll(int page, int size);
 
     List<UserResponseDTO> filterByRole(int page, int size, String role);
 
-    String blockById(UUID userId);
-
-    String unblockById(UUID userId);
-
     UserResponseDTO changeRole(ChangeRoleDTO roleDTO);
 
     UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto);
+
+    User getUserByEmail(String email);
+
+    String blockById(UUID userId);
+
+    String unblockById(UUID userId);
 
     String deleteById(UUID userId);
 

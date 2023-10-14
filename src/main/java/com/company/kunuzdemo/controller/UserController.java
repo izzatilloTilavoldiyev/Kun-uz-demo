@@ -27,11 +27,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
-    @GetMapping("/search-by-email")
-    public ResponseEntity<UserResponseDTO> searchByEmail(@RequestParam @Email String email) {
-        return ResponseEntity.ok(userService.getByEmail(email));
-    }
-
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAll(
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -39,6 +34,12 @@ public class UserController {
     ) {
         return ResponseEntity.ok(userService.getAll(page, size));
     }
+
+    @GetMapping("/search-by-email")
+    public ResponseEntity<UserResponseDTO> searchByEmail(@RequestParam @Email String email) {
+        return ResponseEntity.ok(userService.getByEmail(email));
+    }
+
 
     @GetMapping("/filter-by-role")
     public ResponseEntity<List<UserResponseDTO>> filterByRole(
@@ -49,15 +50,6 @@ public class UserController {
         return ResponseEntity.ok(userService.filterByRole(page, size, role));
     }
 
-    @PutMapping("/block/{userId}")
-    public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
-        return ResponseEntity.ok(userService.blockById(userId));
-    }
-
-    @PutMapping("/unblock/{userId}")
-    public ResponseEntity<String> unblockById(@PathVariable @NotNull UUID userId) {
-        return ResponseEntity.ok(userService.unblockById(userId));
-    }
 
     @PutMapping("/change-role")
     public ResponseEntity<UserResponseDTO> changeRole(
@@ -72,6 +64,16 @@ public class UserController {
             @RequestBody @Valid UserUpdateProfileDTO dto
     ) {
         return ResponseEntity.ok(userService.updateProfile(userId, dto));
+    }
+
+    @PutMapping("/block/{userId}")
+    public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userService.blockById(userId));
+    }
+
+    @PutMapping("/unblock/{userId}")
+    public ResponseEntity<String> unblockById(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userService.unblockById(userId));
     }
 
     @DeleteMapping("/delete/{userId}")
