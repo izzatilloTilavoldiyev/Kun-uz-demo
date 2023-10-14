@@ -1,6 +1,7 @@
 package com.company.kunuzdemo.service.user;
 
 import com.company.kunuzdemo.dtos.request.ChangeRoleDTO;
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.User;
@@ -12,21 +13,21 @@ public interface UserService {
 
     UserResponseDTO getById(UUID id);
 
-    UserResponseDTO getByEmail(String email);
+    User getUserByEmail(String email);
+
+    List<UserResponseDTO> searchByEmail(String email, Integer page, Integer size);
 
     List<UserResponseDTO> getAll(int page, int size);
 
     List<UserResponseDTO> filterByRole(int page, int size, String role);
 
-    UserResponseDTO changeRole(ChangeRoleDTO roleDTO);
-
-    UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto);
-
-    User getUserByEmail(String email);
-
     String blockById(UUID userId);
 
     String unblockById(UUID userId);
+
+    UserResponseDTO changeRole(ChangeRoleDTO roleDTO);
+
+    UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto);
 
     String deleteById(UUID userId);
 

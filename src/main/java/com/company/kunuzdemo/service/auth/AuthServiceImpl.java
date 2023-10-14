@@ -2,6 +2,7 @@ package com.company.kunuzdemo.service.auth;
 
 import com.company.kunuzdemo.config.jwt.JwtService;
 import com.company.kunuzdemo.dtos.request.LoginDTO;
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.request.ResetPasswordDTO;
 import com.company.kunuzdemo.dtos.request.UserCreateDTO;
 import com.company.kunuzdemo.dtos.response.AuthResponseDTO;
@@ -11,6 +12,7 @@ import com.company.kunuzdemo.entity.User;
 import com.company.kunuzdemo.entity.VerificationData;
 import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.enums.UserStatus;
+import com.company.kunuzdemo.exception.DataNotFoundException;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.exception.UserPasswordWrongException;
 import com.company.kunuzdemo.exception.BadRequestException;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -109,9 +112,27 @@ public class AuthServiceImpl implements AuthService{
         if (checkVerificationCodeAndExpiration(user.getVerificationData(), resetPasswordDTO.getVerificationCode()))
             return "Verification code wrong";
         checkUserPasswordAndIsValid(resetPasswordDTO.getNewPassword(), resetPasswordDTO.getConfirmPassword());
-        user.setPassword(resetPasswordDTO.getNewPassword());
+        user.setPassword(passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
         userRepository.save(user);
         return "Password successfully changed";
+    }
+
+
+    @Override
+    public String updatePassword(PasswordUpdateDTO passwordUpdateDTO) {
+        User user = getUserByID(passwordUpdateDTO.getUserID());
+        if (!passwordEncoder.matches(passwordUpdateDTO.getOldPassword(), user.getPassword()))
+            throw new UserPasswordWrongException("Old password wrong! Password: " + passwordUpdateDTO.getOldPassword());
+        checkUserPasswordAndIsValid(passwordUpdateDTO.getNewPassword(), passwordUpdateDTO.getRepeatPassword());
+        user.setPassword(passwordEncoder.encode(passwordUpdateDTO.getNewPassword()));
+        userRepository.save(user);
+        return "Password successfully updated";
+    }
+
+    private User getUserByID(UUID userID) {
+        return userRepository.findById(userID).orElseThrow(
+                () -> new DataNotFoundException("User not found with ID: " + userID)
+        );
     }
 
 

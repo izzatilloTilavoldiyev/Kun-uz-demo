@@ -24,4 +24,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     boolean existsUserByEmail(String email);
 
+    @Query(value = """
+           select * from users u where lower(u.email) like 
+           lower(concat(:email, '%') )
+           """, nativeQuery = true)
+    Page<User> searchByEmail(String email, Pageable pageable);
+
 }

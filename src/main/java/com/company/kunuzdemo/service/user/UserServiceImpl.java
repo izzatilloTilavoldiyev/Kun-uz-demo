@@ -1,12 +1,14 @@
 package com.company.kunuzdemo.service.user;
 
 import com.company.kunuzdemo.dtos.request.ChangeRoleDTO;
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.Media;
 import com.company.kunuzdemo.entity.User;
 import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.exception.DataNotFoundException;
+import com.company.kunuzdemo.exception.UserPasswordWrongException;
 import com.company.kunuzdemo.repository.MediaRepository;
 import com.company.kunuzdemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +40,15 @@ public class UserServiceImpl implements UserService {
 
 
 
+
     @Override
-    public UserResponseDTO getByEmail(String email) {
-        return modelMapper.map(getUserByEmail(email), UserResponseDTO.class);
+    public List<UserResponseDTO> searchByEmail(String email, Integer page, Integer size) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "email");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        List<User> users = userRepository.searchByEmail(email, pageable).getContent();
+        return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {}.getType());
     }
+
 
     @Override
     public List<UserResponseDTO> getAll(int page, int size) {
