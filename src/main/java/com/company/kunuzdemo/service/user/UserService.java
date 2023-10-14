@@ -4,13 +4,12 @@ import com.company.kunuzdemo.dtos.request.ChangeRoleDTO;
 import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.User;
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
+
     UserResponseDTO getById(UUID id);
 
     User getUserByEmail(String email);
@@ -21,7 +20,7 @@ public interface UserService {
 
     List<UserResponseDTO> filterByRole(int page, int size, String role);
 
-    String blocById(UUID userId);
+    String blockById(UUID userId);
 
     String unblockById(UUID userId);
 
