@@ -14,9 +14,9 @@ public interface UserService {
 
     UserResponseDTO getByEmail(String email);
 
-    List<UserResponseDTO> getAll(int page, int size);
+    List<UserResponseDTO> getAll(Integer page, Integer size);
 
-    List<UserResponseDTO> filterByRole(int page, int size, String role);
+    List<UserResponseDTO> filterByRole(Integer page, Integer size, String role);
 
     UserResponseDTO changeRole(ChangeRoleDTO roleDTO);
 

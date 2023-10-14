@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDTO> getAll(int page, int size) {
+    public List<UserResponseDTO> getAll(Integer page, Integer size) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
         List<User> users = userRepository.findAll(pageable).getContent();
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDTO> filterByRole(int page, int size, String role) {
+    public List<UserResponseDTO> filterByRole(Integer page, Integer size, String role) {
         Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
         Pageable pageable = PageRequest.of(page, size, sort);
 
