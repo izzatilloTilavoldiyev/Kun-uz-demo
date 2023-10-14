@@ -1,6 +1,7 @@
 package com.company.kunuzdemo.controller;
 
 import com.company.kunuzdemo.dtos.request.ChangeRoleDTO;
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.request.UserUpdateProfileDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.service.user.UserService;
@@ -27,6 +28,15 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
+    @GetMapping("/search-by-email")
+    public ResponseEntity<List<UserResponseDTO>> searchByEmail(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam @Email String email
+    ) {
+        return ResponseEntity.ok(userService.searchByEmail(email, page, size));
+    }
+
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAll(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -34,12 +44,6 @@ public class UserController {
     ) {
         return ResponseEntity.ok(userService.getAll(page, size));
     }
-
-    @GetMapping("/search-by-email")
-    public ResponseEntity<UserResponseDTO> searchByEmail(@RequestParam @Email String email) {
-        return ResponseEntity.ok(userService.getByEmail(email));
-    }
-
 
     @GetMapping("/filter-by-role")
     public ResponseEntity<List<UserResponseDTO>> filterByRole(
@@ -50,6 +54,15 @@ public class UserController {
         return ResponseEntity.ok(userService.filterByRole(page, size, role));
     }
 
+    @PutMapping("/block/{userId}")
+    public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userService.blockById(userId));
+    }
+
+    @PutMapping("/unblock/{userId}")
+    public ResponseEntity<String> unblockById(@PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userService.unblockById(userId));
+    }
 
     @PutMapping("/change-role")
     public ResponseEntity<UserResponseDTO> changeRole(
@@ -66,15 +79,6 @@ public class UserController {
         return ResponseEntity.ok(userService.updateProfile(userId, dto));
     }
 
-    @PutMapping("/block/{userId}")
-    public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
-        return ResponseEntity.ok(userService.blockById(userId));
-    }
-
-    @PutMapping("/unblock/{userId}")
-    public ResponseEntity<String> unblockById(@PathVariable @NotNull UUID userId) {
-        return ResponseEntity.ok(userService.unblockById(userId));
-    }
 
     @DeleteMapping("/delete/{userId}")
     ResponseEntity<String> deleteById(@PathVariable @NotNull UUID userId) {

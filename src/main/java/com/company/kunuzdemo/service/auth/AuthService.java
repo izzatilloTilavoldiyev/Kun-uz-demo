@@ -1,6 +1,7 @@
 package com.company.kunuzdemo.service.auth;
 
 import com.company.kunuzdemo.dtos.request.LoginDTO;
+import com.company.kunuzdemo.dtos.request.PasswordUpdateDTO;
 import com.company.kunuzdemo.dtos.request.ResetPasswordDTO;
 import com.company.kunuzdemo.dtos.request.UserCreateDTO;
 import com.company.kunuzdemo.dtos.response.AuthResponseDTO;
@@ -20,5 +21,7 @@ public interface AuthService {
     String forgotPassword(String email);
 
     String resetPassword(ResetPasswordDTO resetPasswordDTO);
+
+    String updatePassword(PasswordUpdateDTO passwordUpdateDTO);
 
 }
