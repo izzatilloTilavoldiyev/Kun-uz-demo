@@ -1,4 +1,4 @@
-package com.company.kunuzdemo.repository;
+package com.company.kunuzdemo.exception;
 
 
 public class BadRequestException extends RuntimeException{

@@ -10,7 +10,6 @@ import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.service.auth.AuthService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -13,7 +13,7 @@ import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.enums.UserStatus;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.exception.UserPasswordWrongException;
-import com.company.kunuzdemo.repository.BadRequestException;
+import com.company.kunuzdemo.exception.BadRequestException;
 import com.company.kunuzdemo.repository.UserRepository;
 import com.company.kunuzdemo.service.mail.MailSenderService;
 import com.company.kunuzdemo.service.user.UserService;
