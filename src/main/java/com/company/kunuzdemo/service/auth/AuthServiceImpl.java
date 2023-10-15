@@ -27,9 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +42,9 @@ public class AuthServiceImpl implements AuthService{
     private final AuthenticationManager authenticationManager;
 
 
+    private Map<String, User> userMap = new HashMap<>();
+
+    //todo: check response
     @Override
     public AuthResponseDTO<UserResponseDTO> create(UserCreateDTO userCreateDTO) {
         checkEmailUnique(userCreateDTO.getEmail());
@@ -53,21 +54,22 @@ public class AuthServiceImpl implements AuthService{
         user.setStatus(UserStatus.UNVERIFIED);
         user.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
         user.setVerificationData(generateVerificationData());
-        User savedUser = userRepository.save(user);
+        userMap.put(userCreateDTO.getEmail(), user);
         String message = mailSenderService.sendVerificationCode(user.getEmail(),
-                savedUser.getVerificationData().getVerificationCode());
-        UserResponseDTO mappedUser = modelMapper.map(savedUser, UserResponseDTO.class);
+                user.getVerificationData().getVerificationCode());
+        UserResponseDTO mappedUser = modelMapper.map(user, UserResponseDTO.class);
         return new AuthResponseDTO<>(message, mappedUser);
     }
 
 
     @Override
     public String verify(String email, String verificationCode) {
-        User user = userService.getUserByEmail(email);
+        User user = userMap.get(email);
         if (checkVerificationCodeAndExpiration(user.getVerificationData(), verificationCode))
             return "Verification code wrong";
         user.setStatus(UserStatus.ACTIVE);
         userRepository.save(user);
+        userMap.remove(email);
         return "Successfully verified";
     }
 
