@@ -20,8 +20,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class RegionServiceImplTest {
 
@@ -33,12 +32,13 @@ class RegionServiceImplTest {
     private Region region;
     private RegionCreateDTO regionCreateDTO;
     private List<RegionResponseDTO> regionResponseDTOS;
-    private RegionUpdateDTO dto;
+    private RegionUpdateDTO updateDTO;
     private RegionResponseDTO responseDTO;
     private UUID regionID;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        updateDTO = new RegionUpdateDTO("UZ", "RU", "EN", true);
         regionService = new RegionServiceImpl(regionRepository, modelMapper);
         regionCreateDTO = new RegionCreateDTO("UZ", "RU", "EN");
         regionID = UUID.randomUUID();
@@ -67,11 +67,12 @@ class RegionServiceImplTest {
     @Test
     void update() {
         when(regionRepository.findById(regionID)).thenReturn(Optional.of(region));
-        doNothing().when(modelMapper).map(dto, region);
+        doNothing().when(modelMapper).map(updateDTO, region);
         when(regionRepository.save(region)).thenReturn(region);
         when(modelMapper.map(region, RegionResponseDTO.class));
 
-        RegionResponseDTO rez = regionService.update(regionID, dto);
+        RegionResponseDTO rez = regionService.update(regionID, updateDTO);
+        assertEquals(rez, region);
 
     }
 
@@ -96,10 +97,17 @@ class RegionServiceImplTest {
 
     @Test
     void getAllUnVisible() {
+        when(modelMapper.map(regionRepository.findAllUnVisible(),
+                new TypeToken<List<RegionResponseDTO>>() {}.getType())).thenReturn(regionResponseDTOS);
+        List<RegionResponseDTO> rez = regionService.getAllUnVisible();
+        assertEquals(rez, regionResponseDTOS);
     }
 
     @Test
     void deleteByID() {
+        when(regionRepository.existsById(regionID)).thenReturn(true);
+        assertDoesNotThrow(() -> regionService.deleteByID(regionID));
+        verify(regionRepository).deleteById(regionID);
     }
 
     @Test
