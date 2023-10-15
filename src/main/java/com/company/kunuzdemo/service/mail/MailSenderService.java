@@ -1,5 +1,6 @@
 package com.company.kunuzdemo.service.mail;
 
+import com.company.kunuzdemo.exception.SendVerificationCodeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -25,7 +26,7 @@ public class MailSenderService {
             mailSender.send(simpleMailMessage);
             return "Verification code sent successfully";
         } catch (Exception e) {
-            return "Email to send the verification code";
+            throw new SendVerificationCodeException("Error to send the verification code");
         }
 
     }
