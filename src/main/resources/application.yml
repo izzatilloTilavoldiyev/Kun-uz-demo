@@ -23,9 +23,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/kun_uz
-    username: postgres
-    password: 4999
+    url: jdbc:postgresql://dpg-cklop5av7m0s73a7mul0-a.oregon-postgres.render.com/kun_uz_db
+    username: kun_uz
+    password: kuEZDDKlUpb6g4njXeVpQFMDbIO3LFAa
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
