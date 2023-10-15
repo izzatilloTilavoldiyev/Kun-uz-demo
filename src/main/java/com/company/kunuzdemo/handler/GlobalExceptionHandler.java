@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 @ControllerAdvice
@@ -122,6 +123,16 @@ public class GlobalExceptionHandler {
                 400
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<AppErrorDTO> fileNotFoundExceptionHandler(RuntimeException e, HttpServletRequest request) {
+        AppErrorDTO errorDTO = new AppErrorDTO(
+                request.getRequestURI(),
+                e.getMessage(),
+                404
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
     }
 
 }
