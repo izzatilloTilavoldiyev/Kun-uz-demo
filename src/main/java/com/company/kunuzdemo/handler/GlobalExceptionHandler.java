@@ -1,10 +1,7 @@
 package com.company.kunuzdemo.handler;
 
 import com.company.kunuzdemo.dtos.response.AppErrorDTO;
-import com.company.kunuzdemo.exception.DataNotFoundException;
-import com.company.kunuzdemo.exception.DuplicateValueException;
-import com.company.kunuzdemo.exception.UserPasswordWrongException;
-import com.company.kunuzdemo.exception.BadRequestException;
+import com.company.kunuzdemo.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -109,6 +106,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<AppErrorDTO> badRequestExceptionHandler(RuntimeException e, HttpServletRequest request) {
+        AppErrorDTO errorDTO = new AppErrorDTO(
+                request.getRequestURI(),
+                e.getMessage(),
+                400
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+    }
+
+    @ExceptionHandler(SendVerificationCodeException.class)
+    public ResponseEntity<AppErrorDTO> sendVerificationCodeExceptionHandler(RuntimeException e, HttpServletRequest request) {
         AppErrorDTO errorDTO = new AppErrorDTO(
                 request.getRequestURI(),
                 e.getMessage(),

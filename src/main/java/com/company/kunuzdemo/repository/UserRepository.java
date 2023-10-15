@@ -26,7 +26,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(value = """
            select * from users u where lower(u.email) like 
-           lower(concat(:email, '%') )
+           lower(concat(:email, '%') and not u.deleted)
            """, nativeQuery = true)
     Page<User> searchByEmail(String email, Pageable pageable);
 
