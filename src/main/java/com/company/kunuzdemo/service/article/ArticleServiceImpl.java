@@ -1,6 +1,5 @@
 package com.company.kunuzdemo.service.article;
 
-
 import com.company.kunuzdemo.dtos.request.ArticleCreateDTO;
 import com.company.kunuzdemo.dtos.response.ArticleResponseDTO;
 import com.company.kunuzdemo.entity.Article;
@@ -36,6 +35,11 @@ public class ArticleServiceImpl implements ArticleService{
     private final CategoryService categoryService;
     private final MediaService mediaService;
 
+
+    @Override
+    public Article getArticle(UUID articleID) {
+        return getArticleByID(articleID);
+    }
 
     @Override
     public ArticleResponseDTO create(ArticleCreateDTO articleCreateDTO) {

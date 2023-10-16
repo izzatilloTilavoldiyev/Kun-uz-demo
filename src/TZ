@@ -28,16 +28,14 @@ COMMENT
   1. create
   2. get
   3. get by article
-  4. update
-  5. delete
-  6. delete selected
+  4. delete
+  5. delete selected
 
 LIKE
   1. create
   2. get
   3. get by article
-  4. update
-  5. delete
+  4. delete
 
 MEDIA
   APIs

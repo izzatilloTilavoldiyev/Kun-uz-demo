@@ -2,11 +2,14 @@ package com.company.kunuzdemo.service.article;
 
 import com.company.kunuzdemo.dtos.request.ArticleCreateDTO;
 import com.company.kunuzdemo.dtos.response.ArticleResponseDTO;
+import com.company.kunuzdemo.entity.Article;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface ArticleService {
+
+    Article getArticle(UUID articleID);
 
     ArticleResponseDTO create(ArticleCreateDTO articleCreateDTO);
 
