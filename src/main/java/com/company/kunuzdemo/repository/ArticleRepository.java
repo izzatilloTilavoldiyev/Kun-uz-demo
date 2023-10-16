@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,6 +28,18 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
            lower(concat('%', :title, '%')) and a.status = 'PUBLISHED' and not a.deleted
            """, nativeQuery = true)
     Page<Article> searchByTitle(@Param("title") String title, Pageable pageable);
+
+    @Query(value = "from article a where a.createdBy.id =:createdById and a.createdBy.role = 'PUBLISHER'")
+    List<Article> findArticleByCreatedById(@Param("createdById")UUID createdById, Pageable pageable);
+
+    @Query(value = "from article a where a.status = 'BLOCKED'")
+    List<Article> findArticleByStatusBlocked(Pageable pageable);
+
+    @Query(value = "from article a where a.region.id =:regionID and a.region.visible = true ")
+    List<Article> findArticleByRegion(@Param("regionID")UUID regionID, Pageable pageable);
+
+
+//    List<Article> findLatesArticle(Pageable pageable);
 
     boolean existsByTitle(@Param("title") String title);
 
