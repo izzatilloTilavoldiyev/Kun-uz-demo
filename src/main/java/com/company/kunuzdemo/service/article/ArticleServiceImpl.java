@@ -123,9 +123,9 @@ public class ArticleServiceImpl implements ArticleService{
     public List<ArticleResponseDTO> getLatestNews(Integer page, Integer size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "publishedDate");
         Pageable pageable = PageRequest.of(page, size, sort);
-//        return modelMapper.map(articleRepository.findArticleByPublishedDate(pageable),
-//                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
-        return null;
+        return modelMapper.map(articleRepository.findLatestNews(pageable),
+                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+
     }
 
     @Override
@@ -135,9 +135,9 @@ public class ArticleServiceImpl implements ArticleService{
 
     @Override
     public String deleteById(UUID articleID) {
-        if(!articleRepository.existsById(articleID))
-            throw new DataNotFoundException("Article not found with ID: " + articleID);
-        articleRepository.deleteById(articleID);
+        Article article = getArticle(articleID);
+        article.setDeleted(true);
+        articleRepository.save(article);
         return "Successfully deleted!";
     }
 
@@ -161,10 +161,6 @@ public class ArticleServiceImpl implements ArticleService{
         }
     }
 
-    @Override
-    public Article getArticleById(UUID articleId) {
-        return getArticleByID(articleId);
-    }
 
     private Article getArticleByID(UUID articleID) {
         return articleRepository.findArticleByID(articleID).orElseThrow(
