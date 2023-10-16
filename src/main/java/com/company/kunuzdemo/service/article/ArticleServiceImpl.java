@@ -2,14 +2,14 @@ package com.company.kunuzdemo.service.article;
 
 
 import com.company.kunuzdemo.dtos.request.ArticleCreateDTO;
-import com.company.kunuzdemo.dtos.request.ArticleUpdateDTO;
 import com.company.kunuzdemo.dtos.response.ArticleResponseDTO;
-import com.company.kunuzdemo.dtos.response.CategoryResponseDTO;
 import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.Article;
 import com.company.kunuzdemo.entity.Category;
 import com.company.kunuzdemo.entity.Region;
 import com.company.kunuzdemo.entity.User;
+import com.company.kunuzdemo.enums.ArticleStatus;
+import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.exception.DataNotFoundException;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.repository.ArticleRepository;
@@ -20,7 +20,6 @@ import com.company.kunuzdemo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -67,67 +66,27 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public List<ArticleResponseDTO> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<Article> articleList = articleRepository.findAll(pageable).getContent();
-        return modelMapper.map(articleList, new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+    public List<ArticleResponseDTO> searchByTitle(String title, Integer page, Integer size) {
+        List<Article> articles = articleRepository.searchByTitle(title, PageRequest.of(page, size)).getContent();
+        return modelMapper.map(articles, new TypeToken<List<ArticleResponseDTO>>() {}.getType());
     }
 
     @Override
-    public List<ArticleResponseDTO> findByPublisher(UUID createdById, Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return modelMapper.map(articleRepository.findArticleByCreatedById(createdById, pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
-    }
-
-
-    @Override
-    public List<ArticleResponseDTO> getByRegion(UUID regionID, Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return modelMapper.map(articleRepository.findArticleByRegion(regionID, pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
-    }
-
-    @Override
-    public List<ArticleResponseDTO> getAllBlocked(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return modelMapper.map(articleRepository.findArticleByStatusBlocked(pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
-    }
-
-
-    @Override
-    public List<ArticleResponseDTO> getLatestNews(Integer page, Integer size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "publishedDate");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return modelMapper.map(articleRepository.findArticleByPublishedDate(pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
-    }
-
-    @Override
-    public ArticleResponseDTO updateById(UUID articleID, ArticleUpdateDTO updateDTO) {
-        return null;
-    }
-
-    @Override
-    public String deleteById(UUID articleID) {
-        if(!articleRepository.existsById(articleID))
-            throw new DataNotFoundException("Article not found with ID: " + articleID);
-        articleRepository.deleteById(articleID);
-        return "Successfully deleted!";
-    }
-
-    @Override
-    public String deleteSelected(List<UUID> articleIDs) {
-        for (UUID articleID : articleIDs) {
-            deleteById(articleID);
+    public String changeStatus(UUID articleID, String status) {
+        Article article = getArticleByID(articleID);
+        try {
+            article.setStatus(ArticleStatus.valueOf(status));
+            return "Status successfully changed";
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Enum type not valid: " + status);
         }
-        return "Successfully deleted!";
     }
+
 
     private Article getArticleByID(UUID articleID) {
         return articleRepository.findArticleByID(articleID).orElseThrow(
-                () -> new DataNotFoundException("Article not found for ID: " + articleID));
+                () -> new DataNotFoundException("Article not found for ID: " + articleID)
+        );
     }
 
     private void checkArticleUniqueByTitle(String title) {

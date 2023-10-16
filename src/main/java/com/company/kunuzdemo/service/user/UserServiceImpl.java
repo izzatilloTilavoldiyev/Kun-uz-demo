@@ -45,8 +45,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
     @Override
     public List<UserResponseDTO> searchByEmail(String email, Integer page, Integer size) {
         Sort sort = Sort.by(Sort.Direction.ASC, "email");
