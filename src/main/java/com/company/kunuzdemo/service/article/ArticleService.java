@@ -12,6 +12,10 @@ public interface ArticleService {
 
     ArticleResponseDTO getByID(UUID articleID);
 
+    List<ArticleResponseDTO> getByLanguage(String language, Integer page, Integer size);
+
+    List<ArticleResponseDTO> recommendedList(Integer page, Integer size);
+
     List<ArticleResponseDTO> searchByTitle(String title, Integer page, Integer size);
 
     String changeStatus(UUID articleID, String status);

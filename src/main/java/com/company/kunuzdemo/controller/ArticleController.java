@@ -39,6 +39,27 @@ public class ArticleController {
     }
 
 
+    @GetMapping("/get-by-language")
+    public ResponseEntity<List<ArticleResponseDTO>> getByLanguage(
+            @RequestParam String language,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        List<ArticleResponseDTO> byLanguage = articleService.getByLanguage(language, page, size);
+        return ResponseEntity.ok(byLanguage);
+    }
+
+
+    @GetMapping("/recommended")
+    public ResponseEntity<List<ArticleResponseDTO>> recommendedList(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        List<ArticleResponseDTO> recommendedList = articleService.recommendedList(page, size);
+        return ResponseEntity.ok(recommendedList);
+    }
+
+
     @GetMapping("/search-by-title")
     public ResponseEntity<List<ArticleResponseDTO>> searchByTitle(
             @RequestParam String title,
