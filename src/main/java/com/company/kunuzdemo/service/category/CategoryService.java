@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CategoryService {
+
     CategoryResponseDTO create(CategoryCreateDTO dto);
+
+    Category getCategory(UUID categoryID);
 
     CategoryResponseDTO getById(UUID categoryId);
 

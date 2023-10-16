@@ -25,13 +25,14 @@ public class ArticleCreateDTO {
     @NotNull(message = "UserID must not be null")
     private UUID userID;
 
-    private UUID mediaID;
+    private Long mediaID;
 
-    private Region region;
+    @NotNull(message = "RegionID must not be null")
+    private UUID regionID;
 
-    @NotBlank(message = "Category must not be blank")
-    private Category category;
+    @NotNull(message = "CategoryID must not be null")
+    private UUID categoryID;
 
     @NotBlank(message = "Language must not be blank")
-    private Language language;
+    private String language;
 }
