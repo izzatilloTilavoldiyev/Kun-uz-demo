@@ -10,6 +10,8 @@ import java.util.UUID;
 
 public interface ArticleService {
 
+    Article getArticle(UUID articleID);
+
     ArticleResponseDTO create(ArticleCreateDTO articleCreateDTO);
 
     ArticleResponseDTO getByID(UUID articleID);
