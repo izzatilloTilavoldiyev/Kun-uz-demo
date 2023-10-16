@@ -54,6 +54,14 @@ public class UserController {
         return ResponseEntity.ok(userService.filterByRole(page, size, role));
     }
 
+    @GetMapping("/all-deleted")
+    public ResponseEntity<List<UserResponseDTO>> getAllDeleted(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(userService.getAllDeleted(page, size));
+    }
+
     @PutMapping("/block/{userId}")
     public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
         return ResponseEntity.ok(userService.blockById(userId));

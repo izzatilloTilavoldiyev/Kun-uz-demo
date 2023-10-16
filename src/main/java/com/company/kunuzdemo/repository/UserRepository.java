@@ -20,6 +20,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("select u from users u where u.role = :userRole")
     Page<User> filterByRole(@Param("userRole") UserRole userRole, Pageable pageable);
 
+    @Query("from users u where u.deleted = true ")
+    Page<User> findAllDeleted(Pageable pageable);
+
     Optional<User> findByEmail(String email);
 
     boolean existsUserByEmail(String email);
