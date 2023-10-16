@@ -2,9 +2,11 @@ package com.company.kunuzdemo.controller;
 
 
 import com.company.kunuzdemo.dtos.request.ArticleCreateDTO;
+import com.company.kunuzdemo.dtos.request.ArticleUpdateDTO;
 import com.company.kunuzdemo.dtos.response.ArticleResponseDTO;
 import com.company.kunuzdemo.service.article.ArticleService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
