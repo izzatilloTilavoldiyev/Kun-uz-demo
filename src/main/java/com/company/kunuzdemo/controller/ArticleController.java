@@ -2,14 +2,18 @@ package com.company.kunuzdemo.controller;
 
 
 import com.company.kunuzdemo.dtos.request.ArticleCreateDTO;
+import com.company.kunuzdemo.dtos.request.ArticleUpdateDTO;
 import com.company.kunuzdemo.dtos.response.ArticleResponseDTO;
+import com.company.kunuzdemo.dtos.response.RegionResponseDTO;
 import com.company.kunuzdemo.service.article.ArticleService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +39,71 @@ public class ArticleController {
     ) {
         ArticleResponseDTO articleResponseDTO = articleService.getByID(articleID);
         return ResponseEntity.ok(articleResponseDTO);
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<List<ArticleResponseDTO>> getAll(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(articleService.getAll(page, size));
+    }
+
+    @GetMapping("/get-by-publisher/{createdById}")
+    public ResponseEntity<List<ArticleResponseDTO>> getAllVisible(
+            @PathVariable @NotNull UUID createdById,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(articleService.findByPublisher(createdById, page, size));
+    }
+
+    @GetMapping("/get-all-blocked")
+    public ResponseEntity<List<ArticleResponseDTO>> getAllUnVisible(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(articleService.getAllBlocked(page, size));
+    }
+
+    @GetMapping("/get-by-region/{regionID}")
+    public ResponseEntity<List<ArticleResponseDTO>> getByRegion(
+            @PathVariable @NotNull UUID regionID,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(articleService.getByRegion(regionID, page, size));
+    }
+
+    @GetMapping("/get-latest-news")
+    public ResponseEntity<List<ArticleResponseDTO>> getLatestNews(
+            @PathVariable @NotNull UUID regionID,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "5") Integer size
+    ) {
+        return ResponseEntity.ok(articleService.getLatestNews(page, size));
+    }
+
+    @PutMapping("/{articleID}")
+    public ResponseEntity<ArticleResponseDTO> updateById(
+            @PathVariable @NotNull UUID articleID,
+            @RequestBody @Valid ArticleUpdateDTO updateDTO
+    ) {
+        return ResponseEntity.ok(articleService.updateById(articleID, updateDTO));
+    }
+
+    @DeleteMapping("/{articleID}")
+    public ResponseEntity<String> deleteById(
+            @PathVariable @NotNull UUID articleID
+    ) {
+        return ResponseEntity.ok(articleService.deleteById(articleID));
+    }
+
+    @DeleteMapping("/delete-selected")
+    public ResponseEntity<String> deleteSelected(
+            @RequestParam @NotNull List<UUID> articleIDs
+    ) {
+        return ResponseEntity.ok(articleService.deleteSelected(articleIDs));
     }
 
 }
