@@ -21,6 +21,8 @@ public interface UserService {
 
     List<UserResponseDTO> filterByRole(Integer page, Integer size, String role);
 
+    List<UserResponseDTO> getAllDeleted(Integer page, Integer size);
+
     String blockById(UUID userId);
 
     String unblockById(UUID userId);
