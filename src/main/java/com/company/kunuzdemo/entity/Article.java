@@ -8,8 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "article")
+@Entity(name = "article")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -24,8 +23,8 @@ public class Article extends BaseEntity{
     private String description;
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "user_id")
-    private User user;
+    @JoinColumn(nullable = false, name = "created_by")
+    private User createdBy;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Media media;
@@ -40,7 +39,7 @@ public class Article extends BaseEntity{
 
     @Column(name = "article_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private ArticleStatus status;
+    private ArticleStatus status = ArticleStatus.CREATED;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

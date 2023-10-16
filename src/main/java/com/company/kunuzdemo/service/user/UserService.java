@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
+    User getUserByID(UUID userID);
 
     UserResponseDTO getById(UUID id);
 
