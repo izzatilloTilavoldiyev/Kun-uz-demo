@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserService {
     private final MediaRepository mediaRepository;
 
     @Override
+    public User getUserByID(UUID userID) {
+        return findById(userID);
+    }
+
+    @Override
     public UserResponseDTO getById(UUID id) {
         User user = findById(id);
         return modelMapper.map(user, UserResponseDTO.class);

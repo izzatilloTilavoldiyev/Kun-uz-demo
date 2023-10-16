@@ -31,6 +31,11 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    public Category getCategory(UUID categoryID) {
+        return getCategoryById(categoryID);
+    }
+
+    @Override
     public List<CategoryResponseDTO> getAll() {
 
         List<Category> categoryList = categoryRepository.findAll();
