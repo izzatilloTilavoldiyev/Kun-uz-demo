@@ -74,6 +74,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserResponseDTO> getAllDeleted(Integer page, Integer size) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        List<User> users = userRepository.findAllDeleted(pageable).getContent();
+        return modelMapper.map(users, new TypeToken<List<UserResponseDTO>>() {
+        }.getType());
+    }
+
+    @Override
     public UserResponseDTO changeRole(ChangeRoleDTO roleDTO) {
         User user = findById(roleDTO.getUserId());
 
