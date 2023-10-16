@@ -2,11 +2,9 @@ package com.company.kunuzdemo.controller;
 
 
 import com.company.kunuzdemo.dtos.request.ArticleCreateDTO;
-import com.company.kunuzdemo.dtos.request.ArticleUpdateDTO;
 import com.company.kunuzdemo.dtos.response.ArticleResponseDTO;
 import com.company.kunuzdemo.service.article.ArticleService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +38,26 @@ public class ArticleController {
         return ResponseEntity.ok(articleResponseDTO);
     }
 
+
+    @GetMapping("/get-by-language")
+    public ResponseEntity<List<ArticleResponseDTO>> getByLanguage(
+            @RequestParam String language,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        List<ArticleResponseDTO> byLanguage = articleService.getByLanguage(language, page, size);
+        return ResponseEntity.ok(byLanguage);
+    }
+
+
+    @GetMapping("/recommended")
+    public ResponseEntity<List<ArticleResponseDTO>> recommendedList(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        List<ArticleResponseDTO> recommendedList = articleService.recommendedList(page, size);
+        return ResponseEntity.ok(recommendedList);
+    }
 
 
     @GetMapping("/search-by-title")

@@ -9,7 +9,7 @@ import com.company.kunuzdemo.entity.Category;
 import com.company.kunuzdemo.entity.Region;
 import com.company.kunuzdemo.entity.User;
 import com.company.kunuzdemo.enums.ArticleStatus;
-import com.company.kunuzdemo.enums.UserRole;
+import com.company.kunuzdemo.enums.Language;
 import com.company.kunuzdemo.exception.DataNotFoundException;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.repository.ArticleRepository;
@@ -21,8 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,6 +61,20 @@ public class ArticleServiceImpl implements ArticleService{
         article.setViewCount(article.getViewCount() + 1);
         Article savedArticle = articleRepository.save(article);
         return modelMapper.map(savedArticle, ArticleResponseDTO.class);
+    }
+
+    @Override
+    public List<ArticleResponseDTO> getByLanguage(String language, Integer page, Integer size) {
+        List<Article> articles = articleRepository.findByLanguage(
+                Language.valueOf(language), PageRequest.of(page, size)).getContent();
+        return modelMapper.map(articles, new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+    }
+
+    @Override
+    public List<ArticleResponseDTO> recommendedList(Integer page, Integer size) {
+        List<Article> recommendedList = articleRepository
+                .findRecommendedArticles(PageRequest.of(page, size)).getContent();
+        return modelMapper.map(recommendedList, new TypeToken<List<ArticleResponseDTO>>() {}.getType());
     }
 
     @Override
@@ -136,6 +148,7 @@ public class ArticleServiceImpl implements ArticleService{
         Article article = getArticleByID(articleID);
         try {
             article.setStatus(ArticleStatus.valueOf(status));
+            articleRepository.save(article);
             return "Status successfully changed";
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Enum type not valid: " + status);
