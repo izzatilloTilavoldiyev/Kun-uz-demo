@@ -37,7 +37,7 @@ public class Article extends BaseEntity{
     @JoinColumn(nullable = false, name = "category_id")
     private Category category;
 
-    @Column(name = "article_status", nullable = false)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private ArticleStatus status = ArticleStatus.CREATED;
 

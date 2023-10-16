@@ -3,10 +3,13 @@ package com.company.kunuzdemo.service.article;
 
 import com.company.kunuzdemo.dtos.request.ArticleCreateDTO;
 import com.company.kunuzdemo.dtos.response.ArticleResponseDTO;
+import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.Article;
 import com.company.kunuzdemo.entity.Category;
 import com.company.kunuzdemo.entity.Region;
 import com.company.kunuzdemo.entity.User;
+import com.company.kunuzdemo.enums.ArticleStatus;
+import com.company.kunuzdemo.enums.UserRole;
 import com.company.kunuzdemo.exception.DataNotFoundException;
 import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.repository.ArticleRepository;
@@ -16,8 +19,13 @@ import com.company.kunuzdemo.service.region.RegionService;
 import com.company.kunuzdemo.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -55,6 +63,23 @@ public class ArticleServiceImpl implements ArticleService{
         article.setViewCount(article.getViewCount() + 1);
         Article savedArticle = articleRepository.save(article);
         return modelMapper.map(savedArticle, ArticleResponseDTO.class);
+    }
+
+    @Override
+    public List<ArticleResponseDTO> searchByTitle(String title, Integer page, Integer size) {
+        List<Article> articles = articleRepository.searchByTitle(title, PageRequest.of(page, size)).getContent();
+        return modelMapper.map(articles, new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+    }
+
+    @Override
+    public String changeStatus(UUID articleID, String status) {
+        Article article = getArticleByID(articleID);
+        try {
+            article.setStatus(ArticleStatus.valueOf(status));
+            return "Status successfully changed";
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Enum type not valid: " + status);
+        }
     }
 
 

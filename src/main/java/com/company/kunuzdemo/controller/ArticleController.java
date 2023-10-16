@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,11 +31,32 @@ public class ArticleController {
 
 
     @GetMapping("/{articleID}")
-    public ResponseEntity<ArticleResponseDTO> create(
+    public ResponseEntity<ArticleResponseDTO> getById(
             @PathVariable UUID articleID
     ) {
         ArticleResponseDTO articleResponseDTO = articleService.getByID(articleID);
         return ResponseEntity.ok(articleResponseDTO);
+    }
+
+
+    @GetMapping("/search-by-title")
+    public ResponseEntity<List<ArticleResponseDTO>> searchByTitle(
+            @RequestParam String title,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        List<ArticleResponseDTO> articleResponseDTOS = articleService.searchByTitle(title, page, size);
+        return ResponseEntity.ok(articleResponseDTOS);
+    }
+
+
+    @PutMapping("/change-status/{articleID}")
+    public ResponseEntity<String> changeStatus(
+            @PathVariable UUID articleID,
+            @RequestParam String status
+    ) {
+        String response = articleService.changeStatus(articleID, status);
+        return ResponseEntity.ok(response);
     }
 
 }
