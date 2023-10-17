@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 public class Article extends BaseEntity{
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false, columnDefinition = "text")

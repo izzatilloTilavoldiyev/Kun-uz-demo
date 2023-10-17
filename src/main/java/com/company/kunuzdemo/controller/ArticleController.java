@@ -90,6 +90,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getAll(page, size));
     }
 
+    //todo: change method name
     @GetMapping("/get-by-publisher/{createdById}")
     public ResponseEntity<List<ArticleResponseDTO>> getAllVisible(
             @PathVariable @NotNull UUID createdById,

@@ -25,6 +25,7 @@ public interface ArticleService {
     List<ArticleResponseDTO> findByPublisher(UUID createdById, Integer page, Integer size);
 
     List<ArticleResponseDTO> getAll(Integer page, Integer size);
+
     List<ArticleResponseDTO> getByRegion(UUID regionID, Integer page, Integer size);
 
     ArticleResponseDTO updateById(UUID articleID, ArticleUpdateDTO updateDTO);

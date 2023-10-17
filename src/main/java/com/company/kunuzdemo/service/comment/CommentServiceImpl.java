@@ -1,9 +1,7 @@
 package com.company.kunuzdemo.service.comment;
 
 import com.company.kunuzdemo.dtos.request.CommentRequestDTO;
-import com.company.kunuzdemo.dtos.response.ArticleResponseDTO;
 import com.company.kunuzdemo.dtos.response.CommentResponseDTO;
-import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.entity.Article;
 import com.company.kunuzdemo.entity.Comment;
 import com.company.kunuzdemo.entity.User;
@@ -28,6 +26,7 @@ public class CommentServiceImpl implements CommentService{
     private final ModelMapper modelMapper;
     private final CommentRepository commentRepository;
 
+    //todo: set text
     @Override
     public CommentResponseDTO create(CommentRequestDTO requestDTO) {
         User user = userService.getUserByID(requestDTO.getUserID());
