@@ -118,7 +118,6 @@ public class ArticleController {
 
     @GetMapping("/get-latest-news")
     public ResponseEntity<List<ArticleResponseDTO>> getLatestNews(
-            @PathVariable @NotNull UUID regionID,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "5") Integer size
     ) {

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,5 +32,23 @@ public class CommentController {
             @PathVariable @NotNull UUID commentID
     ) {
         return ResponseEntity.ok(commentService.getByID(commentID));
+    }
+
+    @GetMapping("/get-by-article/{articleID}")
+    public ResponseEntity<List<CommentResponseDTO>> getByArticleID(
+            @PathVariable @NotNull UUID articleID
+    ) {
+        return ResponseEntity.ok(commentService.getByArticleID(articleID));
+    }
+
+    @DeleteMapping("/delete/{commentID}")
+    public ResponseEntity<String> delete(@PathVariable @NotNull UUID commentID) {
+        return ResponseEntity.ok(commentService.deleteById(commentID));
+    }
+
+    @DeleteMapping("/delete-selected/{commentID}")
+    public ResponseEntity<String> deleteSelected(
+            @RequestParam @NotNull List<UUID> commentIDs) {
+        return ResponseEntity.ok(commentService.deleteSelected(commentIDs));
     }
 }
