@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("from users u where not u.deleted and u.id = :userId")
-    Optional<User> getUserById(@Param("userId") UUID id);
+    Optional<User> getUserByID(@Param("userId") UUID id);
     @Query("from users u where not u.deleted")
     Page<User> findAllUsers(Pageable pageable);
 

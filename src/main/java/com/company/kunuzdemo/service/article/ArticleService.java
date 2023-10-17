@@ -22,7 +22,7 @@ public interface ArticleService {
 
     List<ArticleResponseDTO> searchByTitle(String title, Integer page, Integer size);
 
-    List<ArticleResponseDTO> findByPublisher(UUID createdById, Integer page, Integer size);
+    List<ArticleResponseDTO> getByPublisher(Integer page, Integer size);
 
     List<ArticleResponseDTO> getAll(Integer page, Integer size);
 

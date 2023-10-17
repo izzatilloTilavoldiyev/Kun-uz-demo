@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import static com.company.kunuzdemo.enums.UserStatus.ACTIVE;
@@ -35,12 +34,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByID(UUID userID) {
-        return findById(userID);
+        return findByID(userID);
     }
 
     @Override
     public UserResponseDTO getById(UUID id) {
-        User user = findById(id);
+        User user = findByID(id);
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
@@ -87,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO changeRole(ChangeRoleDTO roleDTO) {
-        User user = findById(roleDTO.getUserId());
+        User user = findByID(roleDTO.getUserId());
 
         try {
             user.setRole(UserRole.valueOf(roleDTO.getRole()));
@@ -98,8 +97,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto) {
-        User user = findById(userId);
+    public UserResponseDTO updateProfile(UUID userID, UserUpdateProfileDTO dto) {
+        User user = findByID(userID);
 
         if (dto.getMediaId() != null) {
             Media media = mediaRepository.findById(dto.getMediaId()).orElseThrow(
@@ -119,14 +118,14 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    private User findById(UUID id) {
-        return userRepository.getUserById(id).orElseThrow(
+    private User findByID(UUID id) {
+        return userRepository.getUserByID(id).orElseThrow(
                 () -> new DataNotFoundException("user not found with ID: " + id));
     }
 
     @Override
-    public String blockById(UUID userId) {
-        User user = findById(userId);
+    public String blockByID(UUID userID) {
+        User user = findByID(userID);
         if(user.getStatus().equals(BLOCKED)) {
             return "User already blocked";
         }
@@ -136,8 +135,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String unblockById(UUID userId) {
-        User user = findById(userId);
+    public String unblockByID(UUID userID) {
+        User user = findByID(userID);
         if(user.getStatus().equals(ACTIVE)) {
             return "User already unblocked";
         }
@@ -148,17 +147,17 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String deleteById(UUID userId) {
-        User user = findById(userId);
+    public String deleteByID(UUID userID) {
+        User user = findByID(userID);
         user.setDeleted(true);
         userRepository.save(user);
         return "user deleted";
     }
 
     @Override
-    public void deleteSelectedUsers(List<UUID> userIds) {
-        for (UUID userId : userIds) {
-            deleteById(userId);
+    public void deleteSelectedUsers(List<UUID> userIDs) {
+        for (UUID userID : userIDs) {
+            deleteByID(userID);
         }
     }
 }

@@ -24,15 +24,15 @@ public interface UserService {
 
     List<UserResponseDTO> getAllDeleted(Integer page, Integer size);
 
-    String blockById(UUID userId);
+    String blockByID(UUID userId);
 
-    String unblockById(UUID userId);
+    String unblockByID(UUID userId);
 
     UserResponseDTO changeRole(ChangeRoleDTO roleDTO);
 
     UserResponseDTO updateProfile(UUID userId, UserUpdateProfileDTO dto);
 
-    String deleteById(UUID userId);
+    String deleteByID(UUID userId);
 
     void deleteSelectedUsers(List<UUID> userIds);
 }

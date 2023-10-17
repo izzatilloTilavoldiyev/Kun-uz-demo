@@ -22,52 +22,50 @@ public class CategoryController {
 
     @PostMapping("/create")
     public ResponseEntity<CategoryResponseDTO> create(@Valid @RequestBody CategoryCreateDTO dto) {
-
         CategoryResponseDTO categoryResponseDTO = categoryService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryResponseDTO);
     }
 
-    @GetMapping("/get-by-id/{categoryId}")
-    public ResponseEntity<CategoryResponseDTO> getById(@PathVariable @NotNull UUID categoryId) {
 
+    @GetMapping("/get-by-id/{categoryId}")
+    public ResponseEntity<CategoryResponseDTO> getById(@PathVariable UUID categoryId) {
         return ResponseEntity.ok(categoryService.getById(categoryId));
     }
 
+
     @GetMapping("/get-all")
     public ResponseEntity<List<CategoryResponseDTO>> getAll() {
-
         return ResponseEntity.ok(categoryService.getAll());
     }
 
+
     @GetMapping("/get-all-visible")
     public ResponseEntity<List<CategoryResponseDTO>> getAllVisible() {
-
         return ResponseEntity.ok(categoryService.getAllVisible());
     }
 
+
     @GetMapping("/get-all-un-visible")
     public ResponseEntity<List<CategoryResponseDTO>> getAllUnVisible() {
-
         return ResponseEntity.ok(categoryService.getAllUnVisible());
     }
 
+
     @PutMapping("/update/{categoryId}")
     public ResponseEntity<CategoryResponseDTO> updateById(
-
-            @PathVariable
-            @NotNull UUID categoryId,
+            @PathVariable UUID categoryId,
             @Valid @RequestBody CategoryUpdateDTO dto
     ) {
-
         return ResponseEntity.ok(categoryService.updateById(categoryId, dto));
     }
 
-    @DeleteMapping("/delete/{categoryId}")
-    public ResponseEntity<String> delete(@PathVariable @NotNull UUID categoryId) {
 
+    @DeleteMapping("/delete/{categoryId}")
+    public ResponseEntity<String> delete(@PathVariable UUID categoryId) {
         categoryService.deleteById(categoryId);
         return ResponseEntity.ok("Successfully deleted!");
     }
+
 
     @DeleteMapping("/all-selected")
     public ResponseEntity<String> deleteSelectedCategories(

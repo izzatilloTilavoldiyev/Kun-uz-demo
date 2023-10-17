@@ -79,7 +79,7 @@ class CategoryServiceImplTest {
     @Test
     void getByIdFail() {
         when(categoryRepository.findCategoryById(categoryId)).thenReturn(Optional.of(category));
-        assertThrows(DataNotFoundException.class, () -> categoryService.getCategoryById(UUID.randomUUID()));
+        assertThrows(DataNotFoundException.class, () -> categoryService.getCategory(UUID.randomUUID()));
 
 //        verify(categoryRepository.findCategoryById(any(UUID.class)), times(1))
         verify(categoryRepository).findCategoryById(any(UUID.class));
@@ -144,7 +144,7 @@ class CategoryServiceImplTest {
     @Test
     void getCategoryById() {
         when(categoryRepository.findCategoryById(categoryId)).thenReturn(Optional.of(category));
-        Category rez = categoryService.getCategoryById(categoryId);
+        Category rez = categoryService.getCategory(categoryId);
         assertEquals(rez, category);
     }
 }
