@@ -36,7 +36,6 @@ public interface ArticleService {
     String deleteById(UUID articleID);
 
     String deleteSelected(List<UUID> articleIDs);
-    Article getArticleById(UUID articleId);
 
     String changeStatus(UUID articleID, String status);
 }

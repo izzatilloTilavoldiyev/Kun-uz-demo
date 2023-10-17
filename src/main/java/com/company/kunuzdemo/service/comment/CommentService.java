@@ -14,6 +14,9 @@ public interface CommentService {
 
     CommentResponseDTO getByID(UUID commentID);
 
+    List<CommentResponseDTO> getByArticleID(UUID articleID);
 
+    String deleteById(UUID commentID);
 
+    String deleteSelected(List<UUID> commentIDs);
 }

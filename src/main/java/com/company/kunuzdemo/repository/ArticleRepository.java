@@ -38,8 +38,9 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     @Query(value = "from article a where a.region.id =:regionID and a.region.visible = true ")
     List<Article> findArticleByRegion(@Param("regionID")UUID regionID, Pageable pageable);
 
-
-//    List<Article> findLatesArticle(Pageable pageable);
+    @Query(value = "from article a where a.publishedDate is not null order by " +
+            "a.publishedDate desc ")
+    List<Article> findLatestNews(Pageable pageable);
 
     boolean existsByTitle(@Param("title") String title);
 
