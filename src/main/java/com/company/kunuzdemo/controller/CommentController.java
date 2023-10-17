@@ -46,6 +46,7 @@ public class CommentController {
         return ResponseEntity.ok(commentService.deleteById(commentID));
     }
 
+    //todo: fix pathVariable and id
     @DeleteMapping("/delete-selected/{commentID}")
     public ResponseEntity<String> deleteSelected(
             @RequestParam @NotNull List<UUID> commentIDs) {

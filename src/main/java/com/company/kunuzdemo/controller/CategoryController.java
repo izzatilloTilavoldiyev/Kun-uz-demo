@@ -71,7 +71,7 @@ public class CategoryController {
 
     @DeleteMapping("/all-selected")
     public ResponseEntity<String> deleteSelectedCategories(
-            @RequestBody List<UUID> categoryIDs
+            @RequestParam List<UUID> categoryIDs
     ) {
         categoryService.deleteSelectedCategories(categoryIDs);
         return ResponseEntity.ok("Successfully deleted!");
