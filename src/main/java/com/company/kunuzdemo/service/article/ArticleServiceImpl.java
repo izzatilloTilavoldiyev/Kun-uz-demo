@@ -10,7 +10,6 @@ import com.company.kunuzdemo.entity.User;
 import com.company.kunuzdemo.enums.ArticleStatus;
 import com.company.kunuzdemo.enums.Language;
 import com.company.kunuzdemo.exception.DataNotFoundException;
-import com.company.kunuzdemo.exception.DuplicateValueException;
 import com.company.kunuzdemo.repository.ArticleRepository;
 import com.company.kunuzdemo.service.category.CategoryService;
 import com.company.kunuzdemo.service.media.MediaService;
@@ -24,12 +23,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ArticleServiceImpl implements ArticleService{
+public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
     private final ModelMapper modelMapper;
@@ -46,7 +47,6 @@ public class ArticleServiceImpl implements ArticleService{
 
     @Override
     public ArticleResponseDTO create(ArticleCreateDTO articleCreateDTO) {
-        checkArticleUniqueByTitle(articleCreateDTO.getTitle());
         User user = userService.getUserByID(articleCreateDTO.getUserID());
         Region region = regionService.getRegion(articleCreateDTO.getRegionID());
         Category category = categoryService.getCategory(articleCreateDTO.getCategoryID());
@@ -73,34 +73,40 @@ public class ArticleServiceImpl implements ArticleService{
     public List<ArticleResponseDTO> getByLanguage(String language, Integer page, Integer size) {
         List<Article> articles = articleRepository.findByLanguage(
                 Language.valueOf(language), PageRequest.of(page, size)).getContent();
-        return modelMapper.map(articles, new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+        return modelMapper.map(articles, new TypeToken<List<ArticleResponseDTO>>() {
+        }.getType());
     }
 
     @Override
     public List<ArticleResponseDTO> recommendedList(Integer page, Integer size) {
         List<Article> recommendedList = articleRepository
                 .findRecommendedArticles(PageRequest.of(page, size)).getContent();
-        return modelMapper.map(recommendedList, new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+        return modelMapper.map(recommendedList, new TypeToken<List<ArticleResponseDTO>>() {
+        }.getType());
     }
 
     @Override
     public List<ArticleResponseDTO> searchByTitle(String title, Integer page, Integer size) {
         List<Article> articles = articleRepository.searchByTitle(title, PageRequest.of(page, size)).getContent();
-        return modelMapper.map(articles, new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+        return modelMapper.map(articles, new TypeToken<List<ArticleResponseDTO>>() {
+        }.getType());
     }
 
+    //todo: not deleted
     @Override
     public List<ArticleResponseDTO> getAll(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         List<Article> articleList = articleRepository.findAll(pageable).getContent();
-        return modelMapper.map(articleList, new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+        return modelMapper.map(articleList, new TypeToken<List<ArticleResponseDTO>>() {
+        }.getType());
     }
 
     @Override
     public List<ArticleResponseDTO> findByPublisher(UUID createdById, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         return modelMapper.map(articleRepository.findArticleByCreatedById(createdById, pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+                new TypeToken<List<ArticleResponseDTO>>() {
+                }.getType());
     }
 
 
@@ -108,14 +114,16 @@ public class ArticleServiceImpl implements ArticleService{
     public List<ArticleResponseDTO> getByRegion(UUID regionID, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         return modelMapper.map(articleRepository.findArticleByRegion(regionID, pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+                new TypeToken<List<ArticleResponseDTO>>() {
+                }.getType());
     }
 
     @Override
     public List<ArticleResponseDTO> getAllBlocked(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         return modelMapper.map(articleRepository.findArticleByStatusBlocked(pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+                new TypeToken<List<ArticleResponseDTO>>() {
+                }.getType());
     }
 
 
@@ -124,10 +132,12 @@ public class ArticleServiceImpl implements ArticleService{
         Sort sort = Sort.by(Sort.Direction.DESC, "publishedDate");
         Pageable pageable = PageRequest.of(page, size, sort);
         return modelMapper.map(articleRepository.findLatestNews(pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+                new TypeToken<List<ArticleResponseDTO>>() {
+                }.getType());
 
     }
 
+    //todo: update
     @Override
     public ArticleResponseDTO updateById(UUID articleID, ArticleUpdateDTO updateDTO) {
         return null;
@@ -152,13 +162,11 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public String changeStatus(UUID articleID, String status) {
         Article article = getArticleByID(articleID);
-        try {
-            article.setStatus(ArticleStatus.valueOf(status));
-            articleRepository.save(article);
-            return "Status successfully changed";
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Enum type not valid: " + status);
-        }
+        article.setStatus(ArticleStatus.valueOf(status));
+        if (Objects.equals(article.getStatus(), ArticleStatus.PUBLISHED))
+            article.setPublishedDate(LocalDateTime.now());
+        articleRepository.save(article);
+        return "Status successfully changed";
     }
 
 
@@ -168,8 +176,4 @@ public class ArticleServiceImpl implements ArticleService{
         );
     }
 
-    private void checkArticleUniqueByTitle(String title) {
-        if (articleRepository.existsByTitle(title))
-            throw new DuplicateValueException("Article already exists with Title: " + title);
-    }
 }
