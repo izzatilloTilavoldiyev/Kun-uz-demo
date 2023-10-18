@@ -82,7 +82,7 @@ public class MediaService {
     }
 
     public Media getMediaById(Long mediaID) {
-        return mediaRepository.findById(mediaID).orElseThrow(
+        return mediaRepository.findMediaByID(mediaID).orElseThrow(
                 () -> new DataNotFoundException("Media not found with ID: " + mediaID)
         );
     }
