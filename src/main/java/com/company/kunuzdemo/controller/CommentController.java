@@ -20,6 +20,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+
     @PostMapping("/create")
     public ResponseEntity<CommentResponseDTO> create(
             @RequestBody @Valid CommentRequestDTO requestDTO
@@ -27,29 +28,32 @@ public class CommentController {
         return ResponseEntity.ok(commentService.create(requestDTO));
     }
 
+
     @GetMapping("/{commentID}")
-    public ResponseEntity<CommentResponseDTO> getById(
-            @PathVariable @NotNull UUID commentID
+    public ResponseEntity<CommentResponseDTO> getByID(
+            @PathVariable UUID commentID
     ) {
         return ResponseEntity.ok(commentService.getByID(commentID));
     }
 
+
     @GetMapping("/get-by-article/{articleID}")
     public ResponseEntity<List<CommentResponseDTO>> getByArticleID(
-            @PathVariable @NotNull UUID articleID
+            @PathVariable UUID articleID
     ) {
         return ResponseEntity.ok(commentService.getByArticleID(articleID));
     }
 
+
     @DeleteMapping("/delete/{commentID}")
-    public ResponseEntity<String> delete(@PathVariable @NotNull UUID commentID) {
+    public ResponseEntity<String> delete(@PathVariable UUID commentID) {
         return ResponseEntity.ok(commentService.deleteById(commentID));
     }
 
-    //todo: fix pathVariable and id
-    @DeleteMapping("/delete-selected/{commentID}")
+
+    @DeleteMapping("/delete-selected/{commentIDs}")
     public ResponseEntity<String> deleteSelected(
-            @RequestParam @NotNull List<UUID> commentIDs) {
+            @PathVariable List<UUID> commentIDs) {
         return ResponseEntity.ok(commentService.deleteSelected(commentIDs));
     }
 }

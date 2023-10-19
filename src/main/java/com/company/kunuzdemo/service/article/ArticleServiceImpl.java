@@ -3,10 +3,7 @@ package com.company.kunuzdemo.service.article;
 import com.company.kunuzdemo.dtos.request.ArticleCreateDTO;
 import com.company.kunuzdemo.dtos.request.ArticleUpdateDTO;
 import com.company.kunuzdemo.dtos.response.ArticleResponseDTO;
-import com.company.kunuzdemo.entity.Article;
-import com.company.kunuzdemo.entity.Category;
-import com.company.kunuzdemo.entity.Region;
-import com.company.kunuzdemo.entity.User;
+import com.company.kunuzdemo.entity.*;
 import com.company.kunuzdemo.enums.ArticleStatus;
 import com.company.kunuzdemo.enums.Language;
 import com.company.kunuzdemo.exception.DataNotFoundException;
@@ -23,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.nio.channels.IllegalBlockingModeException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -39,11 +37,11 @@ public class ArticleServiceImpl implements ArticleService {
     private final CategoryService categoryService;
     private final MediaService mediaService;
 
-
     @Override
     public Article getArticle(UUID articleID) {
         return getArticleByID(articleID);
     }
+
 
     @Override
     public ArticleResponseDTO create(ArticleCreateDTO articleCreateDTO) {
@@ -69,6 +67,7 @@ public class ArticleServiceImpl implements ArticleService {
         return modelMapper.map(savedArticle, ArticleResponseDTO.class);
     }
 
+
     @Override
     public List<ArticleResponseDTO> getByLanguage(String language, Integer page, Integer size) {
         List<Article> articles = articleRepository.findByLanguage(
@@ -76,6 +75,7 @@ public class ArticleServiceImpl implements ArticleService {
         return modelMapper.map(articles, new TypeToken<List<ArticleResponseDTO>>() {
         }.getType());
     }
+
 
     @Override
     public List<ArticleResponseDTO> recommendedList(Integer page, Integer size) {
@@ -85,6 +85,7 @@ public class ArticleServiceImpl implements ArticleService {
         }.getType());
     }
 
+
     @Override
     public List<ArticleResponseDTO> searchByTitle(String title, Integer page, Integer size) {
         List<Article> articles = articleRepository.searchByTitle(title, PageRequest.of(page, size)).getContent();
@@ -92,56 +93,63 @@ public class ArticleServiceImpl implements ArticleService {
         }.getType());
     }
 
-    //todo: not deleted
-    @Override
-    public List<ArticleResponseDTO> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<Article> articleList = articleRepository.findAll(pageable).getContent();
-        return modelMapper.map(articleList, new TypeToken<List<ArticleResponseDTO>>() {
-        }.getType());
-    }
 
     @Override
-    public List<ArticleResponseDTO> findByPublisher(UUID createdById, Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return modelMapper.map(articleRepository.findArticleByCreatedById(createdById, pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {
-                }.getType());
+    public List<ArticleResponseDTO> getAll(Integer page, Integer size) {
+        return modelMapper.map(articleRepository.getAll(PageRequest.of(page, size)).getContent(),
+                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
+    }
+
+
+    @Override
+    public List<ArticleResponseDTO> getByPublisher(Integer page, Integer size) {
+        return modelMapper.map(articleRepository.findByPublished(PageRequest.of(page, size)).getContent(),
+                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
     }
 
 
     @Override
     public List<ArticleResponseDTO> getByRegion(UUID regionID, Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return modelMapper.map(articleRepository.findArticleByRegion(regionID, pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {
-                }.getType());
+        return modelMapper.map(articleRepository.findArticleByRegion(regionID, PageRequest.of(page, size)).getContent(),
+                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
     }
+
 
     @Override
     public List<ArticleResponseDTO> getAllBlocked(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return modelMapper.map(articleRepository.findArticleByStatusBlocked(pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {
-                }.getType());
+        return modelMapper.map(articleRepository.findArticleByStatusBlocked(PageRequest.of(page, size)).getContent(),
+                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
     }
 
 
     @Override
     public List<ArticleResponseDTO> getLatestNews(Integer page, Integer size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "publishedDate");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return modelMapper.map(articleRepository.findLatestNews(pageable),
-                new TypeToken<List<ArticleResponseDTO>>() {
-                }.getType());
-
+        return modelMapper.map(articleRepository.findLatestNews(PageRequest.of(page, size, sort)).getContent(),
+                new TypeToken<List<ArticleResponseDTO>>() {}.getType());
     }
 
-    //todo: update
+
     @Override
     public ArticleResponseDTO updateById(UUID articleID, ArticleUpdateDTO updateDTO) {
-        return null;
+        Article article = getArticle(articleID);
+        Media media = mediaService.getMediaById(updateDTO.getMediaID());
+        System.out.println();
+        if(!media.isDeleted()) {
+            try {
+                article.setLanguage(Language.valueOf(updateDTO.getLanguage()));
+                article.setTitle(updateDTO.getTitle());
+                article.setDescription(updateDTO.getDescription());
+                article.setCategory(categoryService.getCategory(updateDTO.getCategoryID()));
+                article.setRegion(regionService.getRegion(updateDTO.getReginID()));
+                article.setMedia(media);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Enum type not valid: " + updateDTO.getLanguage());
+            }
+        }
+        return modelMapper.map(articleRepository.save(article), ArticleResponseDTO.class);
     }
+
 
     @Override
     public String deleteById(UUID articleID) {
@@ -151,6 +159,7 @@ public class ArticleServiceImpl implements ArticleService {
         return "Successfully deleted!";
     }
 
+
     @Override
     public String deleteSelected(List<UUID> articleIDs) {
         for (UUID articleID : articleIDs) {
@@ -158,6 +167,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return "Successfully deleted!";
     }
+
 
     @Override
     public String changeStatus(UUID articleID, String status) {

@@ -85,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService{
         }
     }
 
-    public Category getCategoryById(UUID categoryId) {
+    private Category getCategoryById(UUID categoryId) {
         return categoryRepository.findCategoryById(categoryId).orElseThrow(
                 () -> new DataNotFoundException("category not found with ID :" + categoryId));
     }

@@ -7,8 +7,6 @@ import com.company.kunuzdemo.dtos.response.UserResponseDTO;
 import com.company.kunuzdemo.service.user.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getById(@PathVariable @NotNull UUID id) {
+    public ResponseEntity<UserResponseDTO> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getById(id));
     }
 
@@ -62,14 +60,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllDeleted(page, size));
     }
 
-    @PutMapping("/block/{userId}")
-    public ResponseEntity<String> blocById(@PathVariable @NotNull UUID userId) {
-        return ResponseEntity.ok(userService.blockById(userId));
+    @PutMapping("/block/{userID}")
+    public ResponseEntity<String> blocByID(@PathVariable UUID userID) {
+        return ResponseEntity.ok(userService.blockByID(userID));
     }
 
-    @PutMapping("/unblock/{userId}")
-    public ResponseEntity<String> unblockById(@PathVariable @NotNull UUID userId) {
-        return ResponseEntity.ok(userService.unblockById(userId));
+    @PutMapping("/unblock/{userID}")
+    public ResponseEntity<String> unblockByID(@PathVariable UUID userID) {
+        return ResponseEntity.ok(userService.unblockByID(userID));
     }
 
     @PutMapping("/change-role")
@@ -79,23 +77,23 @@ public class UserController {
         return ResponseEntity.ok(userService.changeRole(role));
     }
 
-    @PutMapping("/update-profile/{userId}")
+    @PutMapping("/update-profile/{userID}")
     public ResponseEntity<UserResponseDTO> updateProfile(
-            @PathVariable @NotNull UUID userId,
+            @PathVariable UUID userID,
             @RequestBody @Valid UserUpdateProfileDTO dto
     ) {
-        return ResponseEntity.ok(userService.updateProfile(userId, dto));
+        return ResponseEntity.ok(userService.updateProfile(userID, dto));
     }
 
 
-    @DeleteMapping("/delete/{userId}")
-    ResponseEntity<String> deleteById(@PathVariable @NotNull UUID userId) {
-        return ResponseEntity.ok(userService.deleteById(userId));
+    @DeleteMapping("/delete/{userID}")
+    ResponseEntity<String> deleteByID(@PathVariable UUID userID) {
+        return ResponseEntity.ok(userService.deleteByID(userID));
     }
 
     @DeleteMapping("/delete-selected")
-    public ResponseEntity<String> deleteSelected(@Valid @RequestParam List<UUID> userIds) {
-        userService.deleteSelectedUsers(userIds);
+    public ResponseEntity<String> deleteSelected(@Valid @RequestParam List<UUID> userIDs) {
+        userService.deleteSelectedUsers(userIDs);
         return ResponseEntity.ok("Successfully deleted!");
     }
 }

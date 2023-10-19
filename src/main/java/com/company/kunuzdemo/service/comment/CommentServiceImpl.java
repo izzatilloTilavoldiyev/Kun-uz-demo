@@ -26,15 +26,16 @@ public class CommentServiceImpl implements CommentService{
     private final ModelMapper modelMapper;
     private final CommentRepository commentRepository;
 
-    //todo: set text
+
     @Override
     public CommentResponseDTO create(CommentRequestDTO requestDTO) {
         User user = userService.getUserByID(requestDTO.getUserID());
         Article article = articleService.getArticle(requestDTO.getArticleID());
-        Comment comment = modelMapper.map(requestDTO, Comment.class);
-        comment.setUser(user);
-        comment.setArticle(article);
-
+        Comment comment = Comment.builder()
+                .text(requestDTO.getText())
+                .user(user)
+                .article(article)
+                .build();
         return modelMapper.map(commentRepository.save(comment), CommentResponseDTO.class);
     }
 
