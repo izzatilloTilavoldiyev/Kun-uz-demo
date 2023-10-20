@@ -19,7 +19,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<CommentResponseDTO> create(
             @RequestBody @Valid CommentRequestDTO requestDTO
@@ -45,7 +45,7 @@ public class CommentController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/delete/{commentID}")
     public ResponseEntity<String> delete(@PathVariable UUID commentID) {
         return ResponseEntity.ok(commentService.deleteById(commentID));
