@@ -77,9 +77,15 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public String newVerifyCode(String email) {
         User user = userService.getUserByEmail(email);
-        user.setVerificationData(generateVerificationData());
-        userRepository.save(user);
-        return mailSenderService.sendVerificationCode(email, user.getVerificationData().getVerificationCode());
+        if (user != null) {
+            user.setVerificationData(generateVerificationData());
+            userRepository.save(user);
+            return mailSenderService.sendVerificationCode(email, user.getVerificationData().getVerificationCode());
+        } else {
+            User mapUser = userMap.get(email);
+            mapUser.setVerificationData(generateVerificationData());
+            return mailSenderService.sendVerificationCode(email, mapUser.getVerificationData().getVerificationCode());
+        }
     }
 
 

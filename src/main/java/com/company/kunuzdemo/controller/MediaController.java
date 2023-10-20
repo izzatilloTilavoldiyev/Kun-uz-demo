@@ -8,6 +8,7 @@
     import org.springframework.core.io.UrlResource;
     import org.springframework.http.MediaType;
     import org.springframework.http.ResponseEntity;
+    import org.springframework.security.access.prepost.PreAuthorize;
     import org.springframework.web.bind.annotation.*;
     import org.springframework.web.multipart.MultipartFile;
 
@@ -62,6 +63,7 @@
                 description = "DELETE endpoint to delete media by ID",
                 summary = "delete by ID"
         )
+        @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
         @DeleteMapping("/{mediaID}")
         public ResponseEntity<String> deleteById(
                 @PathVariable Long mediaID

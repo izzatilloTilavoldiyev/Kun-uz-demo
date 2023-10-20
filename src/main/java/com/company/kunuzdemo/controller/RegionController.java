@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class RegionController {
 
     private final RegionService regionService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<RegionResponseDTO> create(
             @Valid @RequestBody RegionCreateDTO createDTO
@@ -30,6 +32,7 @@ public class RegionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(regionDTO);
     }
 
+
     @GetMapping("/{regionID}")
     public ResponseEntity<RegionResponseDTO> getById(
             @PathVariable @NotNull UUID regionID
@@ -37,21 +40,28 @@ public class RegionController {
         return ResponseEntity.ok(regionService.getByID(regionID));
     }
 
+
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping("/get-all")
     public ResponseEntity<List<RegionResponseDTO>> getAll() {
         return ResponseEntity.ok(regionService.getAll());
     }
+
 
     @GetMapping("/get-all-visible")
     public ResponseEntity<List<RegionResponseDTO>> getAllVisible() {
         return ResponseEntity.ok(regionService.getAllVisible());
     }
 
+
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping("/get-all-un-visible")
     public ResponseEntity<List<RegionResponseDTO>> getAllUnVisible() {
         return ResponseEntity.ok(regionService.getAllUnVisible());
     }
 
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/{regionID}")
     public ResponseEntity<RegionResponseDTO> update(
             @PathVariable @NotNull UUID regionID,
@@ -60,6 +70,8 @@ public class RegionController {
         return ResponseEntity.ok(regionService.update(regionID, updateDTO));
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{regionID}")
     public ResponseEntity<String> delete(
             @PathVariable @NotNull UUID regionID
@@ -68,6 +80,8 @@ public class RegionController {
         return ResponseEntity.ok("Successfully deleted!");
     }
 
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/all-selected")
     public ResponseEntity<String> deleteSelectedRegions(
             @RequestBody @Valid List<UUID> regionIDs
