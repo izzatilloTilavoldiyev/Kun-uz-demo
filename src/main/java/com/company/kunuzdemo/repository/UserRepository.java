@@ -23,6 +23,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("from users u where u.deleted = true ")
     Page<User> findAllDeleted(Pageable pageable);
 
+    @Query("select u from users u where u.email =:email and not u.deleted")
     Optional<User> findByEmail(String email);
 
     boolean existsUserByEmail(String email);
