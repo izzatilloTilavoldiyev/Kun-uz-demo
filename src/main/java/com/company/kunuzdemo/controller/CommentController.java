@@ -2,12 +2,11 @@ package com.company.kunuzdemo.controller;
 
 import com.company.kunuzdemo.dtos.request.CommentRequestDTO;
 import com.company.kunuzdemo.dtos.response.CommentResponseDTO;
-import com.company.kunuzdemo.dtos.response.RegionResponseDTO;
 import com.company.kunuzdemo.service.comment.CommentService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<CommentResponseDTO> create(
             @RequestBody @Valid CommentRequestDTO requestDTO
@@ -28,7 +27,7 @@ public class CommentController {
         return ResponseEntity.ok(commentService.create(requestDTO));
     }
 
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     @GetMapping("/{commentID}")
     public ResponseEntity<CommentResponseDTO> getByID(
             @PathVariable UUID commentID
@@ -37,6 +36,7 @@ public class CommentController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     @GetMapping("/get-by-article/{articleID}")
     public ResponseEntity<List<CommentResponseDTO>> getByArticleID(
             @PathVariable UUID articleID
@@ -45,12 +45,14 @@ public class CommentController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/delete/{commentID}")
     public ResponseEntity<String> delete(@PathVariable UUID commentID) {
         return ResponseEntity.ok(commentService.deleteById(commentID));
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/delete-selected/{commentIDs}")
     public ResponseEntity<String> deleteSelected(
             @PathVariable List<UUID> commentIDs) {
