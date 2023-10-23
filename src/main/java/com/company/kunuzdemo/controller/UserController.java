@@ -27,6 +27,8 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     @GetMapping("/search-by-email")
     public ResponseEntity<List<UserResponseDTO>> searchByEmail(
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -58,7 +60,7 @@ public class UserController {
     }
 
 
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping("/all-deleted")
     public ResponseEntity<List<UserResponseDTO>> getAllDeleted(
             @RequestParam(required = false, defaultValue = "0") Integer page,

@@ -74,6 +74,7 @@ public class ArticleController {
     }
 
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'PUBLISHER')")
     @PutMapping("/change-status/{articleID}")
     public ResponseEntity<String> changeStatus(
             @PathVariable UUID articleID,
