@@ -84,6 +84,7 @@ public class ArticleController {
     }
 
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping("/get-all")
     public ResponseEntity<List<ArticleResponseDTO>> getAll(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -93,6 +94,7 @@ public class ArticleController {
     }
 
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping("/get-by-publisher")
     public ResponseEntity<List<ArticleResponseDTO>> getByPublisher(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -102,6 +104,7 @@ public class ArticleController {
     }
 
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping("/get-all-blocked")
     public ResponseEntity<List<ArticleResponseDTO>> getAllUnVisible(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -111,6 +114,7 @@ public class ArticleController {
     }
 
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping("/get-by-region/{regionID}")
     public ResponseEntity<List<ArticleResponseDTO>> getByRegion(
             @PathVariable UUID regionID,
@@ -121,6 +125,7 @@ public class ArticleController {
     }
 
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping("/get-latest-news")
     public ResponseEntity<List<ArticleResponseDTO>> getLatestNews(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -130,6 +135,7 @@ public class ArticleController {
     }
 
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @PutMapping("/{articleID}")
     public ResponseEntity<ArticleResponseDTO> updateById(
             @PathVariable UUID articleID,
@@ -139,6 +145,7 @@ public class ArticleController {
     }
 
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @DeleteMapping("/{articleID}")
     public ResponseEntity<String> deleteById(
             @PathVariable UUID articleID
@@ -147,6 +154,7 @@ public class ArticleController {
     }
 
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @DeleteMapping("/delete-selected")
     public ResponseEntity<String> deleteSelected(
             @RequestParam List<UUID> articleIDs
