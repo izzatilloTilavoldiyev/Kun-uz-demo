@@ -50,6 +50,14 @@ public class CommentServiceImpl implements CommentService{
                 new TypeToken<List<CommentResponseDTO>>() {}.getType());
     }
 
+
+    @Override
+    public CommentResponseDTO updateById(UUID commentID, String text) {
+        Comment comment = getByCommentId(commentID);
+        comment.setText(text);
+        return modelMapper.map(commentRepository.save(comment), CommentResponseDTO.class);
+    }
+
     @Override
     public String deleteById(UUID commentID) {
         if(!commentRepository.existsById(commentID))

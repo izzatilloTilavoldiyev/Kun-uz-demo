@@ -45,6 +45,15 @@ public class CommentController {
     }
 
 
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/update-by-id/{commentID}")
+    public  ResponseEntity<CommentResponseDTO> updateById(
+            @PathVariable UUID commentID,
+            @RequestParam String text
+    ) {
+        return ResponseEntity.ok(commentService.updateById(commentID, text));
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/delete/{commentID}")
     public ResponseEntity<String> delete(@PathVariable UUID commentID) {
@@ -52,7 +61,7 @@ public class CommentController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete-selected/{commentIDs}")
     public ResponseEntity<String> deleteSelected(
             @PathVariable List<UUID> commentIDs) {
